@@ -29,7 +29,7 @@ namespace Repository.Domain
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime createDate { get; set; }
+        public DateTime CreateDate { get; set; }
         /// <summary>
         /// 状态：0-未获取，1-获取中，2-已获取
         /// </summary>

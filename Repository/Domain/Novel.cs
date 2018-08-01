@@ -21,7 +21,7 @@ namespace Repository.Domain
         /// <summary>
         /// 书籍状态
         /// </summary>
-        public String Satus { get; set; }
+        public String State { get; set; }
         /// <summary>
         /// 书籍类型
         /// </summary>
