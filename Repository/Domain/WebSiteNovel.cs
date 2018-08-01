@@ -6,28 +6,32 @@ using System.Text;
 namespace Repository.Domain
 {
     /// <summary>
-    /// 章节类
+    /// 网站书籍类
     /// </summary>
-    public class Chapter : EntityBase
+    public class WebSiteNovel : EntityBase
     {
         /// <summary>
-        /// 书籍id
+        /// 网站id
         /// </summary>
-        public string NovelId { get; set; }
+        public string WebSiteId { get; set; }
         /// <summary>
-        /// 章节名称
+        /// 书籍名称
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 来源
+        /// 作者
         /// </summary>
-        public string SourceUrl { get; set; }
+        public string Author { get; set; }
         /// <summary>
-        /// 排序字段
+        /// 地址
         /// </summary>
-        public int Sort { get; set; }
+        public string NovelUrl { get; set; }
         /// <summary>
-        /// 状态：0-未获取，1-获取中，2-获取完成
+        /// 创建时间
+        /// </summary>
+        public DateTime createDate { get; set; }
+        /// <summary>
+        /// 状态：0-未获取，1-获取中，2-已获取
         /// </summary>
         public int State { get; set; }
     }
