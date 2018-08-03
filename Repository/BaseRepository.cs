@@ -93,7 +93,7 @@ namespace Repository
                 Save();
             return entity;
         }
-        private void EntityToEntity<T>(T pTargetObjSrc, T pTargetObjDest)
+        private void EntityToEntity(T pTargetObjSrc, T pTargetObjDest)
         {
             foreach (var mItem in typeof(T).GetProperties())
             {

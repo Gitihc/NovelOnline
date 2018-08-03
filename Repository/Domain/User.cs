@@ -25,7 +25,7 @@ namespace Repository.Domain
         /// <summary>
         /// 性别
         /// </summary>
-        public string Sex { get; set; }
+        public int Sex { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>

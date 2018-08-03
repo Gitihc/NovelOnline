@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{2A7CD71A-59B7-460D-B0C7-78C387F54F42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovelOnlie.Mvc", "NovelOnlie.Mvc\NovelOnlie.Mvc.csproj", "{CAA3C7AB-ADA8-4639-AA26-D6F26A8CA8AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NovelOnlie.Mvc", "NovelOnlie.Mvc\NovelOnlie.Mvc.csproj", "{CAA3C7AB-ADA8-4639-AA26-D6F26A8CA8AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovelOnline.App", "NovelOnline.App\NovelOnline.App.csproj", "{59541FC6-8CF4-4C3E-9FDE-207CE635155E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{CAA3C7AB-ADA8-4639-AA26-D6F26A8CA8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAA3C7AB-ADA8-4639-AA26-D6F26A8CA8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAA3C7AB-ADA8-4639-AA26-D6F26A8CA8AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59541FC6-8CF4-4C3E-9FDE-207CE635155E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59541FC6-8CF4-4C3E-9FDE-207CE635155E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59541FC6-8CF4-4C3E-9FDE-207CE635155E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59541FC6-8CF4-4C3E-9FDE-207CE635155E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{0F5A2D76-B1A1-4013-A515-8721656BEA71} = {03F1BF83-BDFB-4C54-A2FB-A154AB05ED6A}
 		{2A7CD71A-59B7-460D-B0C7-78C387F54F42} = {B37012F8-5A3E-44D2-9A53-68AC9506BD7E}
 		{CAA3C7AB-ADA8-4639-AA26-D6F26A8CA8AD} = {2764DF13-4077-4816-B2FC-1728B41CAAB5}
+		{59541FC6-8CF4-4C3E-9FDE-207CE635155E} = {0EC5AED5-649D-4037-94F1-8E67D11A8415}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14F0D643-4218-4ECC-9B9B-DA47CBA9B3C9}

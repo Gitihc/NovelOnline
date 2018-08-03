@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenAuth.App;
 using Repository;
 
 namespace NovelOnlie.Mvc
@@ -32,6 +34,8 @@ namespace NovelOnlie.Mvc
             var sqlConnectionString = Configuration.GetConnectionString("Default");
             //添加数据上下文
             services.AddDbContext<HLDBContext>(options => options.UseSqlServer(sqlConnectionString));
+
+             //new AutofacServiceProvider(AutofacExt.InitAutofac(services));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +57,7 @@ namespace NovelOnlie.Mvc
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            SendData.Initialize(app.ApplicationServices.CreateScope().ServiceProvider);
         }
     }
 }
