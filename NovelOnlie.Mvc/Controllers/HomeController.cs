@@ -12,5 +12,10 @@ namespace NovelOnlie.Mvc.Controllers
         {
             return View();
         }
+
+        public IActionResult Main()
+        {
+            return View();
+        }
     }
 }

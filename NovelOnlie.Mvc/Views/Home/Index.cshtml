@@ -1,3 +1,82 @@
 ﻿
-<h2>This is Home</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="~/css/main.css" media="all" />
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">NovelOnline</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="~/images/admin.jpg" class="layui-nav-img">
+                        ihc
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">退了</a></li>
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">基础配置</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">用户管理</a></dd>
+                            <dd><a href="javascript:;">菜单管理</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 右侧内容 -->
+        <div class="layui-body layui-form">
+            @*<div class="layui-tab layui-tab-card marg0" lay-filter="bodyTab" id="top_tabs_box">
+                <ul class="layui-tab-title top_tab" id="top_tabs">
+                    <li class="layui-this" lay-id=""><i class="iconfont icon-computer"></i> <cite>后台首页</cite></li>
+                </ul>
+                <ul class="layui-nav closeBox">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="iconfont icon-caozuo"></i> 页面操作</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" class="refresh refreshThis"><i class="layui-icon">&#x1002;</i> 刷新当前</a></dd>
+                            <dd><a href="javascript:;" class="closePageOther"><i class="iconfont icon-prohibit"></i> 关闭其他</a></dd>
+                            <dd><a href="javascript:;" class="closePageAll"><i class="iconfont icon-guanbi"></i> 关闭全部</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+                <div class="layui-tab-content clildFrame">
+                    <div class="layui-tab-item layui-show">
+                        <iframe src="/Home/Main"></iframe>
+                    </div>
+                </div>
+            </div>*@
+        </div>
 
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            © layui.com - 底部固定区域
+        </div>
+    </div>
+    <script src="~/layui/layui.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+
+        });
+    </script>
+</body>
+</html>
