@@ -1,0 +1,185 @@
+﻿@section header
+    {
+    <link href="~/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    @*<link href="~/easyui/themes/default/easyui.css" rel="stylesheet" />*@
+    <link href="~/easyui/themes/icon.css" rel="stylesheet" />
+    <style>
+        .layui-elem-quote {
+            margin-bottom: 2px;
+            padding: 5px;
+            border-bottom: 1px solid #009688;
+        }
+
+        button i {
+            margin-right: 5px;
+        }
+
+        .combo {
+            border-radius: 0px;
+            height: 36px;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .panel-htop {
+            z-index: 29891015 !important;
+        }
+    </style>
+
+}
+
+<blockquote class="layui-elem-quote news_search toolList" id="menus">
+    @*<button data-type="btnAdd" class="layui-btn layui-btn-small layui-btn-normal"><i class="fa fa-plus"></i>添加</button>
+        <button data-type="btnEdit" class="layui-btn layui-btn-small layui-btn-normal"><i class="fa fa-edit"></i>编辑</button>
+        <button data-type="btnDel" class="layui-btn layui-btn-small layui-btn-danger"><i class="fa fa-trash-o"></i>删除</button>
+        <button data-type="btnAddMenu" class="layui-btn layui-btn-small layui-btn-normal"><i class="fa fa-plus"></i>添加菜单</button>
+        <button data-type="btnEditMenu" class="layui-btn layui-btn-small layui-btn-normal"><i class="fa fa-edit"></i>编辑菜单</button>
+        <button data-type="btnDelMenu" class="layui-btn layui-btn-small layui-btn-danger"><i class="fa fa-trash-o"></i>删除菜单</button>*@
+</blockquote>
+
+
+<div class="layui-row" style="height:730px;">
+    <div class="layui-col-xs2">
+        <ul id="mdTree" style="height:730px;border: 1px solid #ccc;margin-left: 5px;padding-left: 1px;"></ul>
+    </div>
+    <div class="layui-col-xs8">
+        <table id="treeGrid" style="height:730px;"></table>
+    </div>
+    <div class="layui-col-xs">
+        <div id="btnGrid" style="height:730px;"></div>
+    </div>
+</div>
+
+<!--模块添加/编辑窗口-->
+<div id="divEdit" style="display: none">
+    <form class="layui-form layui-form-pane" action="" id="formEdit">
+        <input type="hidden" name="Id" v-model="Id" />
+        <input type="hidden" name="CascadeId" v-model="CascadeId" />
+        <input type="hidden" name="CreateDate" v-model="CreateDate" />
+        <input type="hidden" name="CreatorId" v-model="CreatorId" />
+        <input type="hidden" name="CreatorName" v-model="CreatorName" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">模块名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" v-model="Name" required lay-verify="required"
+                       placeholder="请输入模块名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">模块标识</label>
+            <div class="layui-input-block">
+                <input type="text" name="Code" v-model="Code" required lay-verify=""
+                       placeholder="请输入模块标识" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Link</label>
+            <div class="layui-input-block">
+                <input type="text" name="Link" v-model="Link" required lay-verify="required"
+                       placeholder="请输入Link" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标</label>
+            <div class="layui-input-block">
+                <input type="text" name="Icon" v-model="Icon" required lay-verify="required"
+                       placeholder="请输入图标" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序号</label>
+            <div class="layui-input-block">
+                <input type="text" name="Sort" v-model="Sort" required lay-verify="required"
+                       placeholder="请输入排序号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属模块</label>
+            <div class="layui-input-block">
+                <input id="ParentName" name="ParentName" v-model="ParentName" class="layui-input" type="hidden" />
+                <input id="ParentId" name="ParentId" v-model="ParentId" type="hidden" />
+                <ul id="cmbMdTree" name="cmbMdTree" class="easyui-combotree" style="width:390px;height:35px;border-radius:0;" data-options="url:'/UserSession/GetModulesComboTree', loadFilter: function (data, parent) {
+                    var root = { id: '', text: '根节点', children: data };
+                    var filterData = [];
+                    filterData.push(root);
+                    return filterData;
+                    }
+                    , onSelect: function (record) {
+                        if(record.text=='根节点'){
+                            $('#ParentName').val(record.text);
+                            $('#ParentId').val('00000000-0000-0000-0000-000000000000');
+                            return;
+                        }
+                        $('#ParentName').val(record.text);
+                        $('#ParentId').val(record.id);
+                    }"></ul>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: right; padding-right: 25px;">
+                <button class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--添加菜单窗口-->
+<div id="divMenuEdit" style="display: none">
+    <form class="layui-form layui-form-pane" action="" id="mfromEdit">
+        <input type="hidden" name="Id" v-model="Id" />
+        <input type="hidden" name="ModuleId" v-model="ModuleId" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" v-model="Name" required lay-verify="required"
+                       placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">DomId</label>
+            <div class="layui-input-block">
+                <input type="text" name="DomId" v-model="DomId" required lay-verify="required"
+                       placeholder="请输入DomId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标</label>
+            <div class="layui-input-block">
+                <input type="text" name="Icon" v-model="Icon"
+                       placeholder="图标，如：layui-btn-danger" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">样式</label>
+            <div class="layui-input-block">
+                <input type="text" name="Class" v-model="Class"
+                       placeholder="样式，如：layui-btn-danger" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序号</label>
+            <div class="layui-input-block">
+                <input type="text" name="Sort" v-model="Sort" required lay-verify="required"
+                       placeholder="请输入排序号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="Remark" v-model="Remark" required lay-verify=""
+                       placeholder="请输入备注" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: right; padding-right: 25px;">
+                <button class="layui-btn" lay-submit lay-filter="mformSubmit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="~/layui/layui.js"></script>
+<script src="~/easyui/jquery.min.js"></script>
+<script src="~/easyui/jquery.easyui.min.js"></script>
+<script src="~/userjs/modules.js"></script>

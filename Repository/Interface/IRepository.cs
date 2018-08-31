@@ -1,5 +1,6 @@
 ﻿
 using Repository.Core;
+using Repository.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,34 +14,34 @@ namespace Repository.Interface
     /// 定义泛型仓储接口
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    public interface IRepository<T, TPrimaryKey>  where T : EntityBase<TPrimaryKey>
+    public interface IRepository<T, TPrimaryKey> where T : EntityBase<TPrimaryKey>
     {
         /// <summary>
         /// 获取实体集合
         /// </summary>
         /// <returns></returns>
-        List<T> GetAllList();
+        IQueryable<T> GetAll();
 
         /// <summary>
         /// 根据lambda表达式条件获取实体集合
         /// </summary>
         /// <param name="predicate">lambda表达式条件</param>
         /// <returns></returns>
-        List<T> GetAllList(Expression<Func<T, bool>> predicate);
+        IQueryable<T> Find(Expression<Func<T, bool>> predicate);
 
         /// <summary>
         /// 根据主键获取实体
         /// </summary>
         /// <param name="id">实体主键</param>
         /// <returns></returns>
-        T Get(TPrimaryKey id);
+        T FindById(TPrimaryKey id);
 
         /// <summary>
         /// 根据lambda表达式条件获取单个实体
         /// </summary>
         /// <param name="predicate">lambda表达式条件</param>
         /// <returns></returns>
-        T FirstOrDefault(Expression<Func<T, bool>> predicate);
+        T FindSingle(Expression<Func<T, bool>> predicate);
 
         /// <summary>
         /// 新增实体
@@ -48,7 +49,9 @@ namespace Repository.Interface
         /// <param name="entity">实体</param>
         /// <param name="autoSave">是否立即执行保存</param>
         /// <returns></returns>
-        T Insert(T entity, bool autoSave = true);
+        T Add(T entity, bool autoSave = true);
+
+        List<T> AddRange(List<T> entitys, bool autoSave = true);
 
         /// <summary>
         /// 更新实体
@@ -62,7 +65,7 @@ namespace Repository.Interface
         /// </summary>
         /// <param name="entity">实体</param>
         /// <param name="autoSave">是否立即执行保存</param>
-        T InsertOrUpdate(T entity, bool autoSave = true);
+        T AddOrUpdate(T entity, bool autoSave = true);
 
         /// <summary>
         /// 删除实体
@@ -98,6 +101,11 @@ namespace Repository.Interface
 
         void Save();
 
+        int ExecuteSql(string sql);
+
+        object ExecuteScalar(string sql);
+
+        IQueryable<Chapter> ChapterQueryFromSql(string sql);
     }
 
     /// <summary>

@@ -15,12 +15,17 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Infrastructure.Cache;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using NovelOnline.App.Interface;
+using NovelOnline.App.SSO;
 using Repository;
+using Repository.Core;
 using Repository.Interface;
 using IContainer = Autofac.IContainer;
 
-namespace OpenAuth.App
+namespace NovelOnline.App
 {
     public static  class AutofacExt
     {
@@ -30,20 +35,22 @@ namespace OpenAuth.App
             var builder = new ContainerBuilder();
            
             //注册数据库基础操作和工作单元
+            services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddScoped(typeof(IUnitWork), typeof(UnitWork));
-
-            //services.AddScoped(typeof(IAuth), typeof(LocalAuth));
+            
+            services.AddScoped(typeof(IAuth), typeof(LocalAuth));
             //如果想使用WebApi SSO授权，请使用下面这种方式
             //services.AddScoped(typeof(IAuth), typeof(ApiAuth));
 
             //注册app层
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly());
+            builder.RegisterAssemblyTypes(Assembly.Load("Repository")).AsImplementedInterfaces().PropertiesAutowired();
 
             //缓存注入
-            //services.AddScoped(typeof(ICacheContext), typeof(CacheContext));
-            //services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
-            
+            services.AddScoped(typeof(ICacheContext), typeof(CacheContext));
+            services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
+
             builder.Populate(services);
             _container = builder.Build();
             return _container;

@@ -1,0 +1,102 @@
+﻿#content-main { width: 55%; padding: 10px 64px; border: 1px solid #d8d8d8; border-radius: 2px; margin: 30px auto; background: #ede7da; min-height: 800px; } 
+#content p { font-family: "Microsoft YaHei"; font-size: 18px; padding: 0px; margin: 0px; line-height: 2.8; overflow: hidden; }
+
+.fixed-menu { position: absolute; left: 17%; top: 30px; font-size: 24px; z-index: 1040; -webkit-backface-visibility: hidden; width: 60px; } 
+.fixed-menu dl { margin: 0px; }  
+.fixed-menu dd:first-child { border-top: 1px solid rgba(0,0,0,.1); z-index: 100; }  
+.fixed-menu dd { border: 1px solid rgba(0,0,0,.1); border-top: none; z-index: 100; }  
+.fixed-menu dd.act { box-shadow: -10px 5px 25px -4px rgba(0,0,0,.2); width: 78px; border-right: none; z-index: 101; }  
+.fixed-menu dd a { text-align: center; font-size: 12px; width: 58px; height: 58px; color: Black; text-decoration: none; transition: none; } 
+.fixed-menu dd a:hover, .fixed-menu dd a:hover span { color: Red; }  dl dd a i { margin-top: 12px; } dl dd a span { display: block; margin-top: 5px; color: #999; } 
+ dl dd a span:hover { color: red; }
+
+ li, ol, ul { list-style: none outside none; } 
+.panel-wrap .catalog { position: absolute; left: 320px; top: 30px; font-size: 24px; z-index: 1040; -webkit-backface-visibility: hidden; width: 784px; background: white; box-shadow: 0 5px 20px rgba(0,0,0,.2); display: none; } 
+ .panel-wrap.catalog .title { padding: 20px 25px; }  
+ #CatalogContainer { min-height: 235px; max-height: 520px; } 
+ #CatalogContainer ul { overflow: hidden; padding-left: 24px; }  
+ #CatalogContainer ul li { float: left; width: 350px; font: 16px/40px PingFangSC-Regular,HelveticaNeue-Light, 'Helvetica Neue Light' , 'Microsoft YaHei' ,sans-serif; border-top: 1px solid #f2f2f2; }  
+ #CatalogContainer ul li:first-child, #CatalogContainer ul li:first-child + li { border-top: none; } 
+ #CatalogContainer ul li a { float: left; overflow: hidden; max-width: 80%; white-space: nowrap; text-overflow: ellipsis; color: Black; text-decoration: none; } 
+ #CatalogContainer ul li.on a, #CatalogContainer ul li a:hover { color: Red; }
+
+ .panel-wrap { position: absolute; left: 402px; top: 30px; font-size: 24px; z-index: 100; -webkit-backface-visibility: hidden; width: 784px; background: white; box-shadow: 0 5px 20px rgba(0,0,0,.2); display: none; }  
+.panel-wrap.setting { width: 564px; }  
+.close-panel { font-size: 16px; line-height: 24px; position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; transition: .5s; transform: rotate(0); text-align: center; color: #d27d7d; } 
+.lang { font-family: FZZCYSK; font-weight: 400; } 
+.panel-box { padding: 40px 0 40px 24px; }  
+.panel-box h4 { font-size: 18px; line-height: 22px; margin-bottom: 28px; }  
+.panel-wrap.setting li { font-size: 0; margin-top: 28px; }  
+.panel-wrap.setting li:first-child { margin-top: 0; } 
+.panel-wrap.setting li.theme-list span { line-height: 32px; width: 34px; height: 34px; margin-right: 16px; border: 1px solid #e5e5e5; border: 1px solid rgba(0,0,0,.1); border-radius: 100%; }  
+.panel-wrap.setting li.theme-list span.act { border: 1px solid #ed4259; }  
+.panel-wrap.setting li span { display: inline-block; cursor: pointer; text-align: center; vertical-align: middle; }  
+.panel-wrap.setting li i { font: 12px/16px PingFangSC-Regular, '-apple-system' ,Simsun; display: inline-block; margin-right: 16px; vertical-align: middle; color: #666; } 
+.panel-wrap.setting li.theme-list span.act span { display: block; opacity: 1; } 
+.panel-wrap.setting li.theme-list span span { font-size: 12px; transition: opacity .3s; text-align: center; opacity: 0; color: #ed4259; } 
+.iconfont { font-size: 24px; font-style: normal; -webkit-font-smoothing: antialiased; -webkit-text-stroke-width: .1px; -moz-osx-font-smoothing: grayscale; }  
+.panel-wrap.setting li.theme-list span.theme-0 { background: #faf5eb; background: rgba(250,245,235,.8); } 
+.panel-wrap.setting li.theme-list span.theme-1 { background: #f5eacc; background: rgba(245,234,204,.8); } 
+.panel-wrap.setting li.theme-list span.theme-2 { background: #e6f2e6; background: rgba(230,242,230,.8); } 
+.panel-wrap.setting li.theme-list span.theme-3 { background: #e4f1f5; background: rgba(228,241,245,.8); } 
+.panel-wrap.setting li.theme-list span.theme-4 { background: #f5e4e4; background: rgba(245,228,228,.8); } 
+.panel-wrap.setting li.theme-list span.theme-5 { background: #e0e0e0; background: rgba(224,224,224,.8); } 
+.panel-wrap.setting li.theme-list span.theme-6 { position: relative; background: #191b1c; background: rgba(25,27,28,.8); } 
+.panel-wrap.setting li.theme-list span.theme-6 cite { font-size: 16px; position: absolute; top: 7px; left: 9px; text-align: center; color: #fff; color: rgba(255,255,255,.2); } 
+.panel-wrap.setting li.theme-list span.act cite { display: none; }  
+.panel-wrap.setting li.font-family span.yahei { font: 14px/34px PingFangSC-Regular,HelveticaNeue-Light, 'Helvetica Neue Light' , 'Microsoft YaHei' ,sans-serif; } 
+.panel-wrap.setting li.font-family span { width: 78px; height: 34px; margin-right: 16px; transition: color .3s; border: 1px solid #e5e5e5; border: 1px solid rgba(0,0,0,.1);border-radius: 2px; background: #fff; background: rgba(255,255,255,.5); }  
+ .panel-wrap.setting li.font-family span:hover { color: #ed4259; }  
+ .panel-wrap.setting li.font-family span.act { color: #ed4259; border: 1px solid #ed4259; background: #fff0f2; } 
+ .panel-wrap.setting li.font-size cite { display: inline-block; width: 270px; height: 34px; vertical-align: middle; border: 1px solid #e5e5e5; border-radius: 2px; background: #fff; background: rgba(255,255,255,.5); }  
+ .panel-wrap.setting li.font-size span { line-height: 34px; height: 34px; width: 88px; font-size: 15px; }  
+ .panel-wrap.setting li.font-size span:first-child:hover, .panel-wrap.setting li.font-size span:last-child:hover { color: #ED3029; } 
+ .panel-wrap.setting li.font-size span.lang { font-size: 16px; width: 90px; cursor: default; color: #a6a6a6; } 
+ .panel-wrap.setting li span { display: inline-block; cursor: pointer; text-align: center; vertical-align: middle; }
+
+/*--回到顶部--*/
+.fixed-btn { position: fixed; right: 1%; bottom: 5%; width: 40px; /*border: 1px solid #eee;*/ background-color: white; font-size: 24px; z-index: 1040; -webkit-backface-visibility: hidden; } 
+.fixed-btn a { display: inline-block; width: 40px; height: 40px; text-align: center; padding-top: 6px; } 
+a:hover { opacity: .8; color: #799961; }
+
+/*----------字体-----------*/
+#content.font-family01 p { font-family: "Microsoft YaHei"; }
+#content.font-family02 p { font-family: "SimSun"; }
+#content.font-family03 p { font-family: "SimHei"; }
+
+/*--主题--*/
+/*--------------theme-0---------------*/
+body.theme-0 { background-color: #e7e1d4; }
+body.theme-0 #content-main, body.theme-0 .fixed-menu dd { background-color: #f8f3e9; }
+body.theme-0 .fixed-menu dd.act, body.theme-0 .panel-wrap {     background-color: White; }
+
+/*--------------theme-1---------------*/
+body.theme-1 { background-color: #dfcfa4; }  
+body.theme-1 #content-main, body.theme-1 .fixed-menu dd { background-color: #f0e5c2; }  
+body.theme-1 .fixed-menu dd.act, body.theme-1 .panel-wrap { background-color: #f8f1da; } 
+/*--------------theme-2---------------*/
+body.theme-2 { background-color: #cddfcd; }  
+body.theme-2 #content-main, body.theme-2 .fixed-menu dd { background-color: #e1ede1; }  
+body.theme-2 .fixed-menu dd.act, body.theme-2 .panel-wrap { background-color: #fff; } 
+/*--------------theme-3---------------*/
+body.theme-3 { background-color: #ccdade; }  
+body.theme-3 #content-main, body.theme-3 .fixed-menu dd { background-color: #e1eef2; }  
+body.theme-3 .fixed-menu dd.act, body.theme-3 .panel-wrap { background-color: #e8f6f7; } 
+/*--------------theme-4---------------*/
+body.theme-4 { background-color: #ebcece; }  
+body.theme-4 #content-main, body.theme-4 .fixed-menu dd { background-color: #f5e4e4; }  
+body.theme-4 .fixed-menu dd.act, body.theme-4 .panel-wrap { background-color: #faeceb; } 
+/*--------------theme-5---------------*/
+body.theme-5 { background-color: #cfcfcf; }  
+body.theme-5 #content-main, body.theme-5 .fixed-menu dd { background-color: #dedede; }  
+body.theme-5 .fixed-menu dd.act, body.theme-5 .panel-wrap { background-color: #e6e6e6; } 
+/*--------------theme-6---------------*/
+body.theme-6 { background-color: #161819; }  
+body.theme-6 #content-main, body.theme-6 .fixed-menu dd { background-color: #1d1f20; }  
+body.theme-6 .panel-wrap { background-color: #161819; border: 1px solid #444; }  
+body.theme-6 .fixed-menu dd, body.theme-6 .fixed-menu dd.act { background-color: #161819; border: 1px solid #444; border-top: none; }  
+body.theme-6 .fixed-menu dd:first-child, body.theme-6 .fixed-menu dd.act:first-child, body.theme-6 #CatalogContainer ul li { border-top: 1px solid #444; }  
+body.theme-6 #CatalogContainer ul li:first-child, body.theme-6 #CatalogContainer ul li:first-child + li { border-top: none; }  
+body.theme-6 #CatalogContainer ul li.on a, body.theme-6 #CatalogContainer ul li a:hover { color: #c62822; }  
+body.theme-6 .fixed-menu dd.act { border-right: none; }  
+body.theme-6 .fixed-menu dd a { color: #999; }  body.theme-6 #CatalogContainer ul li a { color: #666; }

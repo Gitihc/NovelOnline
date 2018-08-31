@@ -26,6 +26,14 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<long>("ChapterEndPosition")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0L);
+
+                    b.Property<long>("ChapterStartPosition")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0L);
+
                     b.Property<string>("Name")
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
@@ -34,13 +42,17 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<string>("NovelName")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("OriginLink")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200);
+
                     b.Property<int>("Sort")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(1);
-
-                    b.Property<string>("SourceUrl")
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200);
 
                     b.Property<int>("State")
                         .ValueGeneratedOnAdd()
@@ -51,23 +63,29 @@ namespace Repository.Migrations
                     b.ToTable("chapter");
                 });
 
-            modelBuilder.Entity("Repository.Domain.Menu", b =>
+            modelBuilder.Entity("Repository.Domain.Module", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("varchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<string>("CascadeId")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("CreatorId")
-                        .HasColumnType("varchar(64)")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("Icon");
+                    b.Property<string>("Icon")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<int>("IsEnable")
                         .ValueGeneratedOnAdd()
@@ -85,6 +103,10 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<string>("ParentName")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
                     b.Property<int>("Sort")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(1);
@@ -95,7 +117,50 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("menu");
+                    b.ToTable("module");
+                });
+
+            modelBuilder.Entity("Repository.Domain.ModuleElement", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Class")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("DomId")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("ModuleId")
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Remark")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Sort")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("moduleelement");
                 });
 
             modelBuilder.Entity("Repository.Domain.Novel", b =>
@@ -110,25 +175,67 @@ namespace Repository.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<int>("FromType")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
+
                     b.Property<string>("Name")
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("SourceUrl")
+                    b.Property<string>("OriginLink")
                         .HasColumnType("varchar(200)")
                         .HasMaxLength(200);
 
-                    b.Property<string>("State")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue("0");
+                    b.Property<string>("PhysicalPath");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("State")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
                     b.ToTable("novel");
+                });
+
+            modelBuilder.Entity("Repository.Domain.Relevance", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstId")
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Key")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<DateTime>("OperateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("OperatorId")
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("SecondId")
+                        .HasColumnType("varchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("relevance");
                 });
 
             modelBuilder.Entity("Repository.Domain.User", b =>
@@ -188,6 +295,8 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<string>("NovelName");
+
                     b.Property<int>("State")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(0);
@@ -196,12 +305,14 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<string>("UserName");
+
                     b.HasKey("Id");
 
-                    b.ToTable("user_novel");
+                    b.ToTable("usernovel");
                 });
 
-            modelBuilder.Entity("Repository.Domain.WebSite", b =>
+            modelBuilder.Entity("Repository.Domain.Website", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -221,20 +332,20 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<string>("OriginLink")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200);
+
                     b.Property<int>("State")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(0);
 
-                    b.Property<string>("Url")
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200);
-
                     b.HasKey("Id");
 
-                    b.ToTable("web_site");
+                    b.ToTable("website");
                 });
 
-            modelBuilder.Entity("Repository.Domain.WebSiteNovel", b =>
+            modelBuilder.Entity("Repository.Domain.WebsiteNovel", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -254,7 +365,7 @@ namespace Repository.Migrations
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("NovelUrl")
+                    b.Property<string>("OriginLink")
                         .HasColumnType("varchar(200)")
                         .HasMaxLength(200);
 
@@ -268,7 +379,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("web_sitenovel");
+                    b.ToTable("websitenovel");
                 });
 #pragma warning restore 612, 618
         }

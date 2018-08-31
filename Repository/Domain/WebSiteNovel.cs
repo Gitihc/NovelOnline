@@ -8,7 +8,7 @@ namespace Repository.Domain
     /// <summary>
     /// 网站书籍类
     /// </summary>
-    public class WebSiteNovel : EntityBase
+    public class WebsiteNovel : EntityBase
     {
         /// <summary>
         /// 网站id
@@ -25,13 +25,13 @@ namespace Repository.Domain
         /// <summary>
         /// 地址
         /// </summary>
-        public string NovelUrl { get; set; }
+        public string OriginLink { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateDate { get; set; }
         /// <summary>
-        /// 状态：0-未获取，1-获取中，2-已获取
+        /// 状态：0-未获取，1-获取中，2-已获取,3-获取失败
         /// </summary>
         public int State { get; set; }
     }

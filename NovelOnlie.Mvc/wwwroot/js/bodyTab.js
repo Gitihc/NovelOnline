@@ -25,7 +25,7 @@ layui.define(["element","jquery"],function(exports){
 			//显示左侧菜单
 			if($(".navBar").html() == ''){
 				var _this = this;
-				$(".navBar").html(navBar(data)).height($(window).height()-245);
+                $(".navBar").html(leftNavBar(data)).height($(window).height()-245);
 				element.init();  //初始化页面元素
 				$(window).resize(function(){
 					$(".navBar").height($(window).height()-245);
@@ -75,11 +75,11 @@ layui.define(["element","jquery"],function(exports){
 			window.location.href = _this.attr("data-url");
 		}else{
 			var title = '';
-			if(_this.find("i.iconfont,i.layui-icon").attr("data-icon") != undefined){
-				if(_this.find("i.iconfont").attr("data-icon") != undefined){
-					title += '<i class="iconfont '+_this.find("i.iconfont").attr("data-icon")+'"></i>';
-				}else{
-					title += '<i class="layui-icon">'+_this.find("i.layui-icon").attr("data-icon")+'</i>';
+            if (_this.find("i.fa").attr("data-icon") != undefined) {
+                if (_this.find("i.fa").attr("data-icon") != undefined){
+                    title += '<i class="fa ' + _this.find("i.fa").attr("data-icon")+'"></i>';
+				//}else{
+				//	title += '<i class="fa">'+_this.find("i.fa").attr("data-icon")+'</i>';
 				}
 			}
 			//已打开的窗口中不存在
@@ -90,7 +90,7 @@ layui.define(["element","jquery"],function(exports){
 				}
 				tabIdIndex++;
 				title += '<cite>'+_this.find("cite").text()+'</cite>';
-				title += '<i class="layui-icon layui-unselect layui-tab-close" data-id="'+tabIdIndex+'">&#x1006;</i>';
+                title += '<i class="layui-icon layui-unselect layui-tab-close" data-id="'+tabIdIndex+'">&#x1006;</i>';
 				element.tabAdd(tabFilter, {
 			        title : title,
 			        content :"<iframe src='"+_this.attr("data-url")+"' data-id='"+tabIdIndex+"'></frame>",
@@ -98,7 +98,7 @@ layui.define(["element","jquery"],function(exports){
 			    })
 				//当前窗口内容
 				var curmenu = {
-					"icon" : _this.find("i.iconfont").attr("data-icon")!=undefined ? _this.find("i.iconfont").attr("data-icon") : _this.find("i.layui-icon").attr("data-icon"),
+                    "icon": _this.find("i.fa").attr("data-icon") != undefined ? _this.find("i.fa").attr("data-icon") : _this.find("i.fa").attr("data-icon"),
 					"title" : _this.find("cite").text(),
 					"href" : _this.attr("data-url"),
 					"layId" : new Date().getTime()
@@ -111,7 +111,7 @@ layui.define(["element","jquery"],function(exports){
 			}else{
 				//当前窗口内容
 				var curmenu = {
-					"icon" : _this.find("i.iconfont").attr("data-icon")!=undefined ? _this.find("i.iconfont").attr("data-icon") : _this.find("i.layui-icon").attr("data-icon"),
+					"icon" : _this.find("i.fa").attr("data-icon")!=undefined ? _this.find("i.fa").attr("data-icon") : _this.find("i.fa").attr("data-icon"),
 					"title" : _this.find("cite").text(),
 					"href" : _this.attr("data-url")
 				}

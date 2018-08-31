@@ -12,9 +12,9 @@ namespace Repository.Mapper
             builder.HasKey(u => u.Id);
             builder.Property(u => u.Id).HasColumnType("varchar(64)").HasMaxLength(64);
             builder.Property(u => u.Name).HasColumnType("varchar(100)").HasMaxLength(100);
-            builder.Property(u => u.SourceUrl).HasColumnType("varchar(200)").HasMaxLength(200);
+            builder.Property(u => u.OriginLink).HasColumnType("varchar(200)").HasMaxLength(200);
             builder.Property(u => u.State).HasDefaultValue(0);
-            builder.Property(u => u.Type).HasDefaultValue(0);
+            builder.Property(u => u.FromType).HasDefaultValue(0);
             builder.Property(u => u.CreateDate).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
         }
     }

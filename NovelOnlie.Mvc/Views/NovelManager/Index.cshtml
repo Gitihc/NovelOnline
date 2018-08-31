@@ -1,0 +1,111 @@
+﻿@section header
+    {
+    <link href="~/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    @*<link href="~/easyui/themes/default/easyui.css" rel="stylesheet" />*@
+    <link href="~/easyui/themes/icon.css" rel="stylesheet" />
+    <style>
+        .layui-elem-quote {
+            margin-bottom: 2px;
+            padding: 5px;
+            border-bottom: 1px solid #009688;
+        }
+
+        button i {
+            margin-right: 5px;
+        }
+
+        .combo {
+            border-radius: 0px;
+            height: 36px;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .panel-htop {
+            z-index: 29891015 !important;
+        }
+    </style>
+}
+<blockquote class="layui-elem-quote news_search toolList" id="menus"></blockquote>
+<div class="layui-row" style="height:730px;">
+    <div class="layui-col-xs12">
+        <table id="table" style="height:730px;"></table>
+    </div>
+</div>
+@*<div class="layui-row" >
+        <div class="layui-col-xs12">
+            <table id="table"></table>
+        </div>
+    </div>*@
+<!--Novel编辑窗口-->
+<div id="divEdit" style="display: none">
+    <form class="layui-form layui-form-pane" action="" id="formEdit">
+        <input type="hidden" name="Id" v-model="Id" />
+        <input type="hidden" name="PhysicalPath" v-model="PhysicalPath" />
+        <input type="hidden" name="OriginLink" v-model="OriginLink" />
+        <input type="hidden" name="FromType" v-model="FromType" />
+        <input type="hidden" name="State" v-model="State" />
+        <input type="hidden" name="CreateDate" v-model="CreateDate" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">模块名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" v-model="Name" required lay-verify="required"
+                       placeholder="请输入模块名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: right; padding-right: 25px;">
+                <button class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--Novel添加窗口-->
+
+<div id="divAdd" class="layui-tab" style="display:none">
+    <ul class="layui-tab-title">
+        <li class="layui-this">添加地址</li>
+        <li>本地上传</li>
+        <li>搜索Website</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <input type="text" name="ListLink" required lay-verify="required" autocomplete="off" placeholder="请输入目录地址" class="layui-input">
+                </div>
+                <div class="layui-form-item" style="float:right;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="submint_link">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-tab-item">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="localfile">上传本地文件</button>
+                <p id="showMsg"></p>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <input type="text" name="websiteLink" required lay-verify="required" autocomplete="off" placeholder="请输入Website" class="layui-input">
+                </div>
+                <div class="layui-form-item" style="float:right;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="submint_website">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/layui/layui.js"></script>
+<script src="~/easyui/jquery.min.js"></script>
+<script src="~/easyui/jquery.easyui.min.js"></script>
+<script src="~/userjs/Novels.js"></script>

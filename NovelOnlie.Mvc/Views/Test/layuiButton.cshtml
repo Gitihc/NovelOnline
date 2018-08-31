@@ -1,0 +1,242 @@
+﻿<div class="layui-row">
+    <button class="layui-btn layui-btn-primary" id="btn">原始按钮</button>
+    <button class="layui-btn">默认按钮</button>
+    <button class="layui-btn layui-btn-normal">百搭按钮</button>
+    <button class="layui-btn layui-btn-warm">暖色按钮</button>
+    <button class="layui-btn layui-btn-danger">警告按钮</button>
+    <button class="layui-btn layui-btn-disabled">禁用按钮</button>
+</div>
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">按钮</li>
+        <li>form</li>
+        <li>table</li>
+        <li>导航</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-row">
+                <button class="layui-btn layui-btn-primary" id="btn">原始按钮</button>
+                <button class="layui-btn">默认按钮</button>
+                <button class="layui-btn layui-btn-normal">百搭按钮</button>
+                <button class="layui-btn layui-btn-warm">暖色按钮</button>
+                <button class="layui-btn layui-btn-danger">警告按钮</button>
+                <button class="layui-btn layui-btn-disabled">禁用按钮</button>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">复选框</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="like[write]" title="写作">
+                        <input type="checkbox" name="like[read]" title="阅读" checked="">
+                        <input type="checkbox" name="like[game]" title="游戏">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">开关-默认开</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单选框</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="男" title="男" checked="">
+                        <input type="radio" name="sex" value="女" title="女">
+                        <input type="radio" name="sex" value="禁" title="禁用" disabled="">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单行选择框</label>
+                    <div class="layui-input-inline">
+                        <select name="interest" lay-filter="aihao"></select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-tab-item">
+            <div class="layui-row">
+                <table class="layui-hide" id="test" lay-filter="test"></table>
+            </div>
+            <div class="layui-row">
+                <table class="layui-table" lay-data="{url:'json/table3.json', id:'test3'}" lay-filter="test3" id="test3">
+                    <thead>
+                        <tr>
+                            <th lay-data="{type:'checkbox'}">ID</th>
+                            <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                            <th lay-data="{field:'username', width:120, sort: true, edit: 'text'}">用户名</th>
+                            <th lay-data="{field:'email', edit: 'text', minWidth: 150}">邮箱</th>
+                            <th lay-data="{field:'sex', width:80, edit: 'text'}">性别</th>
+                            <th lay-data="{field:'city', edit: 'text', minWidth: 100}">城市</th>
+                            <th lay-data="{field:'experience', sort: true, edit: 'text'}">积分</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>水平导航菜单</legend>
+            </fieldset>
+            <ul class="layui-nav">
+                <li class="layui-nav-item"><a href="">最新活动</a></li>
+                <li class="layui-nav-item layui-this">
+                    <a href="javascript:;">产品</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">选项1</a></dd>
+                        <dd><a href="">选项2</a></dd>
+                        <dd><a href="">选项3</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">大数据</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">移动模块</a></dd>
+                        <dd><a href="">后台模版</a></dd>
+                        <dd class="layui-this"><a href="">选中项</a></dd>
+                        <dd><a href="">电商平台</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">社区</a></li>
+            </ul>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>垂直导航菜单</legend>
+            </fieldset>
+
+            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="margin-right: 10px;">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">默认展开</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">选项一</a></dd>
+                        <dd><a href="javascript:;">选项二</a></dd>
+                        <dd><a href="javascript:;">选项三</a></dd>
+                        <dd><a href="">跳转项</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">移动模块</a></dd>
+                        <dd><a href="">后台模版</a></dd>
+                        <dd><a href="">电商平台</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">云市场</a></li>
+                <li class="layui-nav-item"><a href="">社区</a></li>
+            </ul>
+            <ul class="layui-nav layui-nav-tree layui-bg-cyan layui-inline" lay-filter="demo">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">默认展开</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">选项一</a></dd>
+                        <dd><a href="javascript:;">选项二</a></dd>
+                        <dd><a href="javascript:;">选项三</a></dd>
+                        <dd><a href="">跳转项</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">移动模块</a></dd>
+                        <dd><a href="">后台模版</a></dd>
+                        <dd><a href="">电商平台</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">云市场</a></li>
+                <li class="layui-nav-item"><a href="">社区</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="layui-row">
+    <table id="tbModules" class="layui-table" lay-filter="tbModules" lay-data="{heigth:'full-200',cellMinWidth:80,page:true,limit:30,url:'/ModuleManager/GetAllModules'}">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true,fixed:true}"></th>
+                <td lay-data="{field:'name',width:120,align:'center',fixed:true}">模块名称</td>
+                <td lay-data="{field:'parentName',width:120,align:'center',fixed:true}">父模块名称</td>
+                <td lay-data="{field:'cascadeId',width:120,align:'center',fixed:true}">级联id</td>
+                <td lay-data="{field:'link',width:220,align:'center',fixed:true}">Link</td>
+                <td lay-data="{field:'icon',width:80,align:'center',fixed:true,templet: '#iconTpl'}">图标</td>
+                <td lay-data="{field:'sort',width:80,align:'center',fixed:true}">排序号</td>
+            </tr>
+        </thead>
+    </table>
+    <div id="tbModulesTree" style="padding-top:10px;">
+    </div>
+</div>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script type="text/html" id="iconTpl">
+    {{#  if( d.icon != null && d.icon != ''){ }}
+    <i class="layui-icon {{ d.icon }}"></i>
+    {{#  } else { }}
+    {{ d.icon }}
+    {{#  } }}
+</script>
+<script id="menuTableTpl" type="text/html">
+    <table class="layui-table">
+        <col width="120px" />
+        <col width="120px" />
+        <col width="120px" />
+        <col width="220px" />
+        <col width="80px" />
+        <col width="80px" />
+        <thead>
+            <tr>
+                <th>模块名称</th>
+                <th>父模块名称</th>
+                <th>级联id</th>
+                <th>Link</th>
+                <th>图标</th>
+                <th>排序号</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# layui.each(d.rows,function(index,r){}}
+            <tr>
+                <td><input type="checkbox" />{{ r.name }}</td>
+                <td>{{ r.parentName || '' }}</td>
+                <td>{{ r.cascadeId || '' }}</td>
+                <td>{{ r.link || '' }}</td>
+                <td>{{ r.icon || '' }}</td>
+                <td>{{ r.sort || '' }}</td>
+            </tr>
+            {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script>
+    var $;
+    layui.config({ base: '/layui/extend/' }).use(['element', 'table', 'laytpl', 'treegrid'], function () {
+        var table = layui.table;
+        laytpl = layui.laytpl,
+            treegrid = layui.treegrid;
+        $ = layui.$;
+        treegrid.config.render = function (viewid, data) {
+            var view = document.getElementById(viewid).innerHTML;
+            return laytpl(view).render(data) || '';
+        };
+
+        tree1 = treegrid.createNew({
+            elem: 'tbModulesTree',
+            view: 'menuTableTpl',
+            url: '/ModuleManager/GetTreeGridOfAllModules',
+            id: 'id',
+            root: '00000000-0000-0000-0000-000000000000',
+            parentid: 'parentId',
+            singleSelect: true
+        });
+        tree1.build();
+    });
+</script>
+
+

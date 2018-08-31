@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenAuth.App;
+using NovelOnline.App;
 using Repository;
+using System;
+using System.Reflection;
 
 namespace NovelOnlie.Mvc
 {
@@ -28,14 +26,15 @@ namespace NovelOnlie.Mvc
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
             var sqlConnectionString = Configuration.GetConnectionString("Default");
             //添加数据上下文
             services.AddDbContext<HLDBContext>(options => options.UseSqlServer(sqlConnectionString));
-
-             //new AutofacServiceProvider(AutofacExt.InitAutofac(services));
+            
+           return  new AutofacServiceProvider(AutofacExt.InitAutofac(services));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +54,7 @@ namespace NovelOnlie.Mvc
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Index}/{id?}");
             });
             SendData.Initialize(app.ApplicationServices.CreateScope().ServiceProvider);
         }

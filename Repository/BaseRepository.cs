@@ -1,5 +1,7 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using Repository.Core;
+using Repository.Domain;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace Repository
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <typeparam name="TPrimaryKey">主键类型</typeparam>
-    public  class BaseRepository<T, TPrimaryKey> : IRepository<T,TPrimaryKey> where T : EntityBase<TPrimaryKey>
+    public class BaseRepository<T, TPrimaryKey> : IRepository<T, TPrimaryKey> where T : EntityBase<TPrimaryKey>
     {
         //定义数据访问上下文对象
         protected readonly HLDBContext _dbContext;
@@ -31,9 +33,9 @@ namespace Repository
         /// 获取实体集合
         /// </summary>
         /// <returns></returns>
-        public  List<T> GetAllList()
+        public IQueryable<T> GetAll()
         {
-            return _dbContext.Set<T>().ToList();
+            return _dbContext.Set<T>();
         }
 
         /// <summary>
@@ -41,9 +43,9 @@ namespace Repository
         /// </summary>
         /// <param name="predicate">lambda表达式条件</param>
         /// <returns></returns>
-        public List<T> GetAllList(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> Find(Expression<Func<T, bool>> predicate)
         {
-            return _dbContext.Set<T>().Where(predicate).ToList();
+            return _dbContext.Set<T>().Where(predicate);
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace Repository
         /// </summary>
         /// <param name="id">实体主键</param>
         /// <returns></returns>
-        public T Get(TPrimaryKey id)
+        public T FindById(TPrimaryKey id)
         {
             return _dbContext.Set<T>().FirstOrDefault(CreateEqualityExpressionForId(id));
         }
@@ -61,7 +63,7 @@ namespace Repository
         /// </summary>
         /// <param name="predicate">lambda表达式条件</param>
         /// <returns></returns>
-        public T FirstOrDefault(Expression<Func<T, bool>> predicate)
+        public T FindSingle(Expression<Func<T, bool>> predicate)
         {
             return _dbContext.Set<T>().FirstOrDefault(predicate);
         }
@@ -72,12 +74,26 @@ namespace Repository
         /// <param name="entity">实体</param>
         /// <param name="autoSave">是否立即执行保存</param>
         /// <returns></returns>
-        public T Insert(T entity, bool autoSave = true)
+        public T Add(T entity, bool autoSave = true)
         {
             _dbContext.Set<T>().Add(entity);
             if (autoSave)
                 Save();
             return entity;
+        }
+
+        /// <summary>
+        /// 新增实体
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <param name="autoSave">是否立即执行保存</param>
+        /// <returns></returns>
+        public List<T> AddRange(List<T> entitys, bool autoSave = true)
+        {
+            _dbContext.Set<T>().AddRange(entitys);
+            if (autoSave)
+                Save();
+            return entitys;
         }
 
         /// <summary>
@@ -87,7 +103,7 @@ namespace Repository
         /// <param name="autoSave">是否立即执行保存</param>
         public T Update(T entity, bool autoSave = true)
         {
-            var obj = Get(entity.Id);
+            var obj = FindById(entity.Id);
             EntityToEntity(entity, obj);
             if (autoSave)
                 Save();
@@ -105,11 +121,11 @@ namespace Repository
         /// </summary>
         /// <param name="entity">实体</param>
         /// <param name="autoSave">是否立即执行保存</param>
-        public T InsertOrUpdate(T entity, bool autoSave = true)
+        public T AddOrUpdate(T entity, bool autoSave = true)
         {
-            if (Get(entity.Id) != null)
+            if (FindById(entity.Id) != null)
                 return Update(entity, autoSave);
-            return Insert(entity, autoSave);
+            return Add(entity, autoSave);
         }
 
         /// <summary>
@@ -131,7 +147,7 @@ namespace Repository
         /// <param name="autoSave">是否立即执行保存</param>
         public void Delete(TPrimaryKey id, bool autoSave = true)
         {
-            _dbContext.Set<T>().Remove(Get(id));
+            _dbContext.Set<T>().Remove(FindById(id));
             if (autoSave)
                 Save();
         }
@@ -193,13 +209,44 @@ namespace Repository
 
             return Expression.Lambda<Func<T, bool>>(lambdaBody, lambdaParam);
         }
+        /// <summary>
+        /// 返回影响的行数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public int ExecuteSql(string sql)
+        {
+            return _dbContext.Database.ExecuteSqlCommand(sql);
+        }
+
+        /// <summary>
+        /// 返回第一个值
+        /// </summary>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql)
+        {
+            var conn = _dbContext.Database.GetDbConnection();
+            if (!conn.State.ToString().Equals("Open"))
+            {
+                conn.Open();
+            }
+            var command = conn.CreateCommand();
+            string query = sql;
+            command.CommandText = query;
+            return command.ExecuteScalar();
+        }
+
+        public IQueryable<Chapter> ChapterQueryFromSql(string sql)
+        {
+            return _dbContext.ChapterQuery.FromSql(sql);
+        }
     }
 
     /// <summary>
     /// 主键为Guid类型的仓储基类
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    public  class BaseRepository<T> : BaseRepository<T, string> where T : EntityBase
+    public class BaseRepository<T> : BaseRepository<T, string>, IRepository<T> where T : EntityBase
     {
         public BaseRepository(HLDBContext dbContext) : base(dbContext)
         {

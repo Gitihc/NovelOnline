@@ -8,7 +8,7 @@ namespace Repository.Domain
     /// <summary>
     /// 网站类
     /// </summary>
-    public class WebSite : EntityBase
+    public class Website : EntityBase
     {
         /// <summary>
         /// 网站名称
@@ -17,7 +17,7 @@ namespace Repository.Domain
         /// <summary>
         /// 网址
         /// </summary>
-        public string Url { get; set; }
+        public string OriginLink { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>

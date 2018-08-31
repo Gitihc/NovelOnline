@@ -1,0 +1,201 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>NovelOnline后台</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+    <link href="~/css/home.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+<body class="cyan">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部 -->
+        <div class="layui-header ">
+            <div class="layui-main">
+                <a href="#" class="logo">NovelOnline</a>
+                <!-- 显示/隐藏菜单 -->
+                <a href="javascript:;" class="iconfont hideMenu icon-menu1" title="隐藏/显示左侧菜单"></a>
+                <!-- 天气信息 -->
+                <div class="weather" pc>
+                    <div id="tp-weather-widget"></div>
+                    <script>(function (T, h, i, n, k, P, a, g, e) { g = function () { P = h.createElement(i); a = h.getElementsByTagName(i)[0]; P.src = k; P.charset = "utf-8"; P.async = 1; a.parentNode.insertBefore(P, a) }; T["ThinkPageWeatherWidgetObject"] = n; T[n] || (T[n] = function () { (T[n].q = T[n].q || []).push(arguments) }); T[n].l = +new Date(); if (T.attachEvent) { T.attachEvent("onload", g) } else { T.addEventListener("load", g, false) } }(window, document, "script", "tpwidget", "//widget.seniverse.com/widget/chameleon.js"))</script>
+                    <script>
+                        tpwidget("init", {
+                            "flavor": "slim",
+                            "location": "WX4FBXXFKE4F",
+                            "geolocation": "enabled",
+                            "language": "zh-chs",
+                            "unit": "c",
+                            "theme": "chameleon",
+                            "container": "tp-weather-widget",
+                            "bubble": "disabled",
+                            "alarmType": "badge",
+                            "color": "#FFFFFF",
+                            "uid": "U9EC08A15F",
+                            "hash": "039da28f5581f4bcb5c799fb4cdfb673"
+                        });
+                        tpwidget("show");</script>
+                </div>
+                <!-- 顶部右侧菜单 -->
+                <ul class="layui-nav top_menu">
+                    <li class="layui-nav-item" pc>
+                        <a href="javascript:;">
+                            <img src="/images/admin.jpg" class="layui-circle" width="35" height="35">
+                            <cite id="usernametop"></cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data-url="page/user/changePwd.html"><i class="iconfont icon-shezhi1" data-icon="icon-shezhi1"></i><cite>修改密码</cite></a></dd>
+                            <dd><a href="javascript:;" class="changeSkin"><i class="iconfont icon-huanfu"></i><cite>更换皮肤</cite></a></dd>
+                            <dd><a href="/Account/Index" class="signOut"><i class="iconfont icon-loginout"></i><cite>退出</cite></a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 左侧导航 -->
+        <div class="layui-side layui-bg-cyan">
+            <div class="user-photo">
+                <a class="img" title="我的头像"><img src="/images/admin.jpg"></a>
+                <p>你好！<span class="userName" id="username"></span></p>
+            </div>
+            <div class="navBar layui-side-scroll"></div>
+        </div>
+        <!-- 右侧内容 -->
+        <div class="layui-body layui-form">
+            <div class="layui-tab layui-tab-brief" lay-filter="bodyTab">
+                <ul class="layui-tab-title top_tab">
+                    <li class="layui-this">网站设置</li>
+                </ul>
+                <div class="layui-tab-content clildFrame" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <iframe src="/ModuleManager/Index"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 底部 -->
+        <div class="layui-footer footer">
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/leftNav.js"></script>
+    <script>
+        var $, tab;
+        layui.config({ base: "/js/" }).use(['bodyTab', 'form', 'table', 'layer', 'element', 'jquery'], function () {
+            var form = layui.form,
+                element = layui.element,
+                layer = layui.layer,
+                table = layui.table;
+            $ = layui.jquery;
+
+            tab = layui.bodyTab({
+                openTabNum: "50",  //最大可打开窗口数量
+                url: "/Test/GetLeftMenu" //获取菜单json地址
+            });
+
+            //隐藏左侧导航
+            $(".hideMenu").click(function () {
+                $(".layui-layout-admin").toggleClass("showMenu");
+                //渲染顶部窗口
+                tab.tabMove();
+            })
+            tab.render();   //加载左侧菜单
+
+            // 添加新窗口
+            $("body").on("click", ".layui-nav .layui-nav-item a", function () {
+                //如果不存在子级
+                if ($(this).siblings().length == 0) {
+                    addTab($(this));
+                }
+                $(this).parent("li").siblings().removeClass("layui-nav-itemed");
+            })
+
+            //// 添加新窗口
+            //$("body").on("click", ".layui-nav .layui-nav-item a", function () {
+            //    if ($(this).siblings().length == 0) {
+            //        //addTab($(this));
+            //    }
+            //    $(this).parent("li").siblings().removeClass("layui-nav-itemed");
+            //})
+
+            //$(document).on('click', '#btn', function () {
+            //    layer.msg('hello');
+            //});
+
+            ////监听指定开关
+            //form.on('switch(switchTest)', function (data) {
+            //    //layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+            //    //    offset: '6px'
+            //    //});
+            //    layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+            //});
+            ////监听提交
+            //form.on('submit(demo1)', function (data) {
+            //    layer.alert(JSON.stringify(data.field), {
+            //        title: '最终的提交信息'
+            //    })
+            //    return false;
+            //});
+            //var selectMap = $("select[name = interest]");
+            //var selectArray = ["写作", "阅读", "游戏", "音乐", "旅行"];
+            //$.each(selectArray, function (i, v) {
+            //    selectMap.append('<option value="' + i + '">' + selectArray[i] + '</option>')
+            //});
+            //form.render();
+
+            ////table
+            //var tData = [{ "id": 10000, "username": "user-0", "sex": "女", "city": "城市-0", "sign": "签名-0", "experience": 255, "logins": 24, "wealth": 82830700, "classify": "作家", "score": 57 }, { "id": 10001, "username": "user-1", "sex": "男", "city": "城市-1", "sign": "签名-1", "experience": 884, "logins": 58, "wealth": 64928690, "classify": "词人", "score": 27 }, { "id": 10002, "username": "user-2", "sex": "女", "city": "城市-2", "sign": "签名-2", "experience": 650, "logins": 77, "wealth": 6298078, "classify": "酱油", "score": 31 }, { "id": 10003, "username": "user-3", "sex": "女", "city": "城市-3", "sign": "签名-3", "experience": 362, "logins": 157, "wealth": 37117017, "classify": "诗人", "score": 68 }, { "id": 10004, "username": "user-4", "sex": "男", "city": "城市-4", "sign": "签名-4", "experience": 807, "logins": 51, "wealth": 76263262, "classify": "作家", "score": 6 }, { "id": 10005, "username": "user-5", "sex": "女", "city": "城市-5", "sign": "签名-5", "experience": 173, "logins": 68, "wealth": 60344147, "classify": "作家", "score": 87 }, { "id": 10006, "username": "user-6", "sex": "女", "city": "城市-6", "sign": "签名-6", "experience": 982, "logins": 37, "wealth": 57768166, "classify": "作家", "score": 34 }, { "id": 10007, "username": "user-7", "sex": "男", "city": "城市-7", "sign": "签名-7", "experience": 727, "logins": 150, "wealth": 82030578, "classify": "作家", "score": 28 }, { "id": 10008, "username": "user-8", "sex": "男", "city": "城市-8", "sign": "签名-8", "experience": 951, "logins": 133, "wealth": 16503371, "classify": "词人", "score": 14 }, { "id": 10009, "username": "user-9", "sex": "女", "city": "城市-9", "sign": "签名-9", "experience": 484, "logins": 25, "wealth": 86801934, "classify": "词人", "score": 75 }, { "id": 10010, "username": "user-10", "sex": "女", "city": "城市-10", "sign": "签名-10", "experience": 1016, "logins": 182, "wealth": 71294671, "classify": "诗人", "score": 34 }, { "id": 10011, "username": "user-11", "sex": "女", "city": "城市-11", "sign": "签名-11", "experience": 492, "logins": 107, "wealth": 8062783, "classify": "诗人", "score": 6 }, { "id": 10012, "username": "user-12", "sex": "女", "city": "城市-12", "sign": "签名-12", "experience": 106, "logins": 176, "wealth": 42622704, "classify": "词人", "score": 54 }, { "id": 10013, "username": "user-13", "sex": "男", "city": "城市-13", "sign": "签名-13", "experience": 1047, "logins": 94, "wealth": 59508583, "classify": "诗人", "score": 63 }, { "id": 10014, "username": "user-14", "sex": "男", "city": "城市-14", "sign": "签名-14", "experience": 873, "logins": 116, "wealth": 72549912, "classify": "词人", "score": 8 }, { "id": 10015, "username": "user-15", "sex": "女", "city": "城市-15", "sign": "签名-15", "experience": 1068, "logins": 27, "wealth": 52737025, "classify": "作家", "score": 28 }, { "id": 10016, "username": "user-16", "sex": "女", "city": "城市-16", "sign": "签名-16", "experience": 862, "logins": 168, "wealth": 37069775, "classify": "酱油", "score": 86 }, { "id": 10017, "username": "user-17", "sex": "女", "city": "城市-17", "sign": "签名-17", "experience": 1060, "logins": 187, "wealth": 66099525, "classify": "作家", "score": 69 }, { "id": 10018, "username": "user-18", "sex": "女", "city": "城市-18", "sign": "签名-18", "experience": 866, "logins": 88, "wealth": 81722326, "classify": "词人", "score": 74 }, { "id": 10019, "username": "user-19", "sex": "女", "city": "城市-19", "sign": "签名-19", "experience": 682, "logins": 106, "wealth": 68647362, "classify": "词人", "score": 51 }, { "id": 10020, "username": "user-20", "sex": "男", "city": "城市-20", "sign": "签名-20", "experience": 770, "logins": 24, "wealth": 92420248, "classify": "诗人", "score": 87 }, { "id": 10021, "username": "user-21", "sex": "男", "city": "城市-21", "sign": "签名-21", "experience": 184, "logins": 131, "wealth": 71566045, "classify": "词人", "score": 99 }, { "id": 10022, "username": "user-22", "sex": "男", "city": "城市-22", "sign": "签名-22", "experience": 739, "logins": 152, "wealth": 60907929, "classify": "作家", "score": 18 }, { "id": 10023, "username": "user-23", "sex": "女", "city": "城市-23", "sign": "签名-23", "experience": 127, "logins": 82, "wealth": 14765943, "classify": "作家", "score": 30 }, { "id": 10024, "username": "user-24", "sex": "女", "city": "城市-24", "sign": "签名-24", "experience": 212, "logins": 133, "wealth": 59011052, "classify": "词人", "score": 76 }, { "id": 10025, "username": "user-25", "sex": "女", "city": "城市-25", "sign": "签名-25", "experience": 938, "logins": 182, "wealth": 91183097, "classify": "作家", "score": 69 }, { "id": 10026, "username": "user-26", "sex": "男", "city": "城市-26", "sign": "签名-26", "experience": 978, "logins": 7, "wealth": 48008413, "classify": "作家", "score": 65 }, { "id": 10027, "username": "user-27", "sex": "女", "city": "城市-27", "sign": "签名-27", "experience": 371, "logins": 44, "wealth": 64419691, "classify": "诗人", "score": 60 }, { "id": 10028, "username": "user-28", "sex": "女", "city": "城市-28", "sign": "签名-28", "experience": 977, "logins": 21, "wealth": 75935022, "classify": "作家", "score": 37 }, { "id": 10029, "username": "user-29", "sex": "男", "city": "城市-29", "sign": "签名-29", "experience": 647, "logins": 107, "wealth": 97450636, "classify": "酱油", "score": 27 }];
+            //table.render({
+            //    elem: '#test'
+            //    , url: ''
+            //    , height: 315
+            //    , page: true //开启分页
+            //    , data: tData
+            //    , cellMinWidth: 80
+            //    , cols: [[
+            //        { field: 'id', width: 80, title: 'ID', sort: true }
+            //        , { field: 'username', width: 80, title: '用户名' }
+            //        , {
+            //            field: 'sex', width: 120, title: '性别', sort: true, align: 'center', templet: function (d) {
+            //                return '<select name="sex" lay-filter="sex"> <option value=""></option> <option value="0">女</option> <option value="1" selected="selected">男</option> </select>';
+            //            }
+            //        }
+            //        , { field: 'city', width: 80, title: '城市' }
+            //        , { field: 'sign', title: '签名', width: '30%', minWidth: 100, edit: 'text' } //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+            //        , { field: 'experience', title: '积分', sort: true }
+            //        , { field: 'score', title: '评分', sort: true }
+            //        , { field: 'classify', title: '职业' }
+            //        , { field: 'wealth', width: 137, title: '财富', sort: true }
+            //        , {
+            //            field: 'oper', width: 137, title: '操作', align: 'center', templet: function (d) {
+            //                return '<button class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>移除</button>'
+            //            }
+            //        }
+            //    ]]
+            //});
+            //table.on('edit(test)', function (obj) {
+            //    var value = obj.value
+            //        , data = obj.data
+            //        , field = obj.field;
+            //    layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+            //});
+            //form.on('select(sex)', function (data) {
+            //    debugger
+            //    console.log(data.elem); //得到select原始DOM对象
+            //    console.log(data.value); //得到被选中的值
+            //});
+
+        });
+        //打开新窗口
+        function addTab(_this) {
+            tab.tabAdd(_this);
+        }
+    </script>
+</body>
+</html>

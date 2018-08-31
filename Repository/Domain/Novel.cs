@@ -10,25 +10,35 @@ namespace Repository.Domain
     /// </summary>
     public class Novel:EntityBase
     {
+        public Novel()
+        {
+            Name = "";
+            PhysicalPath = "";
+            OriginLink = "";
+        }
         /// <summary>
-        /// 书籍名称
+        /// 名称
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 书籍引用地址
+        /// 物理路径
         /// </summary>
-        public string SourceUrl { get; set; }
+        public string PhysicalPath { get; set; }
         /// <summary>
-        /// 书籍状态
+        /// 源始地址
         /// </summary>
-        public String State { get; set; }
+        public string OriginLink { get; set; }
         /// <summary>
-        /// 书籍类型
+        /// 来源 默认0:本地，1：网络
         /// </summary>
-        public int Type { get; set; }
+        public int FromType { get; set; }
+        /// <summary>
+        /// 状态（本地：0：处理中，1：完成，；网络：-2:失败,-1：部分未完成 ，1:获取中，2：完成）
+        /// </summary>
+        public int State { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateDate { get; set; }
-}
+    }
 }

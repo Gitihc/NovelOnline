@@ -31,28 +31,35 @@ namespace Repository
                      }
                 );
                 string MenuId = Guid.NewGuid().ToString();
-                context.Set<Menu>().AddRange(
-                  new Menu
+                context.Set<Module>().AddRange(
+                  new Module
                   {
                       Id = MenuId,
                       Name = "基础配置",
-                      Sort = 0,
+                      Sort = 1,
                       ParentId = Guid.Empty.ToString()
                   },
-                   new Menu
+                   new Module
                    {
                        Id = Guid.NewGuid().ToString(),
                        Name = "菜单管理",
-                       Sort = 0,
+                       Sort = 1,
                        ParentId = MenuId
                    },
-                    new Menu
+                    new Module
                     {
                         Id = Guid.NewGuid().ToString(),
                         Name = "用户管理",
-                        Sort = 0,
+                        Sort = 2,
                         ParentId = MenuId
                     }
+                    ,new Module
+                     {
+                         Id = Guid.NewGuid().ToString(),
+                         Name = "角色管理",
+                         Sort = 3,
+                         ParentId = MenuId
+                     }
                    );
                 context.SaveChanges();
             }

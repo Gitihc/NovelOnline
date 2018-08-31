@@ -30,7 +30,7 @@ namespace Repository.Interface
         bool IsExist<T>(Expression<Func<T, bool>> exp) where T:class;
         IQueryable<T> Find<T>(Expression<Func<T, bool>> exp = null) where T:class;
 
-        IQueryable<T> Find<T>(int pageindex = 1, int pagesize = 10, string orderby = "",
+        IQueryable<T> Pagination<T>(int pageindex = 1, int pagesize = 10, string orderby = "",
             Expression<Func<T, bool>> exp = null) where T:class;
 
         int GetCount<T>(Expression<Func<T, bool>> exp = null) where T:class;
@@ -61,6 +61,7 @@ namespace Repository.Interface
 
         void Save();
 
-        void ExecuteSql(string sql);
+        int ExecuteSql(string sql);
+        object ExecuteScalar(string sql);
     }
 }

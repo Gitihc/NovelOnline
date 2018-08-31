@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Repository.Domain;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +15,7 @@ namespace Repository
         {
         }
 
-        //public DbSet<User> Users { get; set; }
+        public DbQuery<Chapter> ChapterQuery { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //builder.Entity<User>().ToTable("User");
@@ -83,7 +84,7 @@ namespace Repository
             foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
             {
                 Regex underscoreRegex = new Regex(@"((?<=.)[A-Z][a-zA-Z]*)|((?<=[a-zA-Z])\d+)");
-                entity.Relational().TableName = underscoreRegex.Replace(entity.DisplayName(), @"_$1$2").ToLower();
+                entity.Relational().TableName = underscoreRegex.Replace(entity.DisplayName(), @"$1$2").ToLower();
             }
         }
     }

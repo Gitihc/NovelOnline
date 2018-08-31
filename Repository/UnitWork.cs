@@ -9,7 +9,7 @@ using Repository.Interface;
 
 namespace Repository
 {
-    public  class UnitWork: IUnitWork
+    public class UnitWork : IUnitWork
     {
         //定义数据访问上下文对象
         protected readonly HLDBContext Context;
@@ -26,7 +26,7 @@ namespace Repository
         /// 根据过滤条件，获取记录
         /// </summary>
         /// <param name="exp">The exp.</param>
-        public IQueryable<T> Find<T>(Expression<Func<T, bool>> exp = null) where T : class 
+        public IQueryable<T> Find<T>(Expression<Func<T, bool>> exp = null) where T : class
         {
             return Filter(exp);
         }
@@ -39,7 +39,7 @@ namespace Repository
         /// <summary>
         /// 查找单个
         /// </summary>
-        public T FindSingle<T>(Expression<Func<T, bool>> exp) where T:class 
+        public T FindSingle<T>(Expression<Func<T, bool>> exp) where T : class
         {
             return Context.Set<T>().AsNoTracking().FirstOrDefault(exp);
         }
@@ -50,7 +50,7 @@ namespace Repository
         /// <param name="pageindex">The pageindex.</param>
         /// <param name="pagesize">The pagesize.</param>
         /// <param name="orderby">排序，格式如："Id"/"Id descending"</param>
-        public IQueryable<T> Find<T>(int pageindex, int pagesize, string orderby = "", Expression<Func<T, bool>> exp = null) where T : class
+        public IQueryable<T> Pagination<T>(int pageindex, int pagesize, string orderby = "", Expression<Func<T, bool>> exp = null) where T : class
         {
             if (pageindex < 1) pageindex = 1;
             if (string.IsNullOrEmpty(orderby))
@@ -88,7 +88,7 @@ namespace Repository
             Context.Set<T>().AddRange(entities);
         }
 
-        public void Update<T>(T entity) where T:class
+        public void Update<T>(T entity) where T : class
         {
             var entry = this.Context.Entry(entity);
             entry.State = EntityState.Modified;
@@ -101,7 +101,7 @@ namespace Repository
 
         }
 
-        public void Delete<T>(T entity) where T:class
+        public void Delete<T>(T entity) where T : class
         {
             Context.Set<T>().Remove(entity);
         }
@@ -112,7 +112,7 @@ namespace Repository
         /// </summary>
         /// <param name="where">The where.</param>
         /// <param name="entity">The entity.</param>
-        public void Update<T>(Expression<Func<T, bool>> where, Expression<Func<T, T>> entity) where T:class
+        public void Update<T>(Expression<Func<T, bool>> where, Expression<Func<T, T>> entity) where T : class
         {
             Context.Set<T>().Where(where).Update(entity);
         }
@@ -124,7 +124,7 @@ namespace Repository
 
         public void Save()
         {
-                Context.SaveChanges();
+            Context.SaveChanges();
         }
 
         private IQueryable<T> Filter<T>(Expression<Func<T, bool>> exp) where T : class
@@ -135,9 +135,31 @@ namespace Repository
             return dbSet;
         }
 
-       public void ExecuteSql(string sql)
-       {
-            Context.Database.ExecuteSqlCommand(sql);
+        /// <summary>
+        /// 返回影响的行数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public int ExecuteSql(string sql)
+        {
+            return Context.Database.ExecuteSqlCommand(sql);
+        }
+
+        /// <summary>
+        /// 返回第一个值
+        /// </summary>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql)
+        {
+            var conn = Context.Database.GetDbConnection();
+            if (!conn.State.Equals("Open"))
+            {
+                conn.Open();
+            }
+            var command = conn.CreateCommand();
+            string query = sql;
+            command.CommandText = query;
+            return command.ExecuteScalar();
         }
 
     }
