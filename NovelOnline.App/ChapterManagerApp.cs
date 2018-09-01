@@ -12,9 +12,10 @@ namespace NovelOnline.App
 {
     public class ChapterManagerApp : BaseApp<Chapter>
     {
-
-        public ChapterManagerApp(IUnitWork unitWork, IRepository<Chapter> repository) : base(unitWork, repository)
+        private readonly UserNovelManager _userNovelManager;
+        public ChapterManagerApp(IUnitWork unitWork, IRepository<Chapter> repository, UserNovelManager userNovelManager) : base(unitWork, repository)
         {
+            _userNovelManager = userNovelManager;
         }
         public List<Chapter> GetChapterList(string novelId)
         {
@@ -25,7 +26,7 @@ namespace NovelOnline.App
             return listChapter;
         }
 
-        public string GetChapterContent(string novelId, string chapterId)
+        public string GetChapterContent(User user,string novelId, string chapterId = "")
         {
             var objNovel = UnitWork.FindSingle<Novel>(x => x.Id == novelId);
             if (objNovel == null) return string.Empty;
@@ -36,13 +37,15 @@ namespace NovelOnline.App
             {
                 case 0://本地
                     var sqlStr = string.Format("SELECT TOP 1 * FROM [{0}] ORDER BY SORT;", novelId);
+                    
                     if (!string.IsNullOrEmpty(chapterId))
                     {
-                        sqlStr = string.Format("SELECT * FROM [{0}] WHERE Id='{1}';", novelId,chapterId);
+                        sqlStr = string.Format("SELECT * FROM [{0}] WHERE Id='{1}';", novelId, chapterId);
                     }
                     var chapter = Repository.ChapterQueryFromSql(sqlStr).ToList().FirstOrDefault();
                     if (chapter != null)
                     {
+                        chapterId = chapter.Id;
                         long startPos = chapter.ChapterStartPosition;
                         long endPos = chapter.ChapterEndPosition;
                         string bookPath = objNovel.PhysicalPath;
@@ -53,6 +56,7 @@ namespace NovelOnline.App
                 case 1://网络
                     break;
             }
+            _userNovelManager.RecordLastOpenTime(user.Id, novelId, chapterId);
             var obj = new { Title = chapterTitle.ToBase64CodeCN(), Content = content.ToBase64CodeCN() };
             return JsonHelper.Instance.Serialize(obj);
         }
@@ -103,8 +107,7 @@ namespace NovelOnline.App
 
             long chapterStart = 0;
             long chapterEnd = 0;
-
-
+            
             using (StreamReader sr = new StreamReader(filePath))
             {
                 totalLength = sr.BaseStream.Length;

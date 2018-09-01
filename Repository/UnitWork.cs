@@ -100,7 +100,7 @@ namespace Repository
             }
 
         }
-
+        
         public void Delete<T>(T entity) where T : class
         {
             Context.Set<T>().Remove(entity);

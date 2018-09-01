@@ -23,7 +23,7 @@ namespace NovelOnline.App
             });
         }
 
-        public void RemoveRelationShip(string userId ,string novelId)
+        public void RemoveRelationShip(string userId, string novelId)
         {
             Repository.Delete(x => x.UserId == userId && x.NovelId == novelId);
         }
@@ -40,7 +40,12 @@ namespace NovelOnline.App
 
         public IQueryable<string> GetUserNovelIds(string userId)
         {
-            return Repository.Find(x => x.UserId == userId).Select(x=>x.NovelId);
+            return Repository.Find(x => x.UserId == userId).Select(x => x.NovelId);
+        }
+
+        public void RecordLastOpenTime(string userId, string novelId, string chapterId)
+        {
+            Repository.Update(r => r.UserId == userId && r.NovelId == novelId, r => new UserNovel { LastOpenTime = System.DateTime.Now, LastChapterId = chapterId });
         }
     }
 }

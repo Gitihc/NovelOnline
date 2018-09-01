@@ -19,12 +19,20 @@ namespace NovelOnlie.Mvc.Controllers
         {
             return View();
         }
-
-        public string GetChapterContent(string novelId, string chapterId)
+        
+        public String GetChapterContent(String novelId, String chapterId ="")
         {
-            return _app.GetChapterContent(novelId, chapterId);
-        }
+            try
+            {
+                var user = _authUtil.GetCurrentUser().User;
+                return _app.GetChapterContent(user,novelId, chapterId);
+            }
+            catch (Exception ex)
+            {
 
+                throw ex;
+            }
+        }
 
     }
 }

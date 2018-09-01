@@ -61,6 +61,14 @@ namespace Repository.Interface
         T Update(T entity, bool autoSave = true);
 
         /// <summary>
+        /// 实现按需要只更新部分更新
+        /// <para>如：Update(u =>u.Id==1,u =>new User{Name="ok"});</para>
+        /// </summary>
+        /// <param name="where">The where.</param>
+        /// <param name="entity">The entity.</param>
+        void Update(Expression<Func<T, bool>> where, Expression<Func<T, T>> entity);
+
+        /// <summary>
         /// 新增或更新实体
         /// </summary>
         /// <param name="entity">实体</param>

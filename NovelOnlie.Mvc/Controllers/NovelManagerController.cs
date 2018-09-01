@@ -29,16 +29,33 @@ namespace NovelOnlie.Mvc.Controllers
 
         public string GetNovelList()
         {
-            var user = _authUtil.GetCurrentUser().User;
-            var listNovel = _app.UserNovelList(user).ToList();
-            return JsonHelper.Instance.Serialize(listNovel);
+            try
+            {
+                var user = _authUtil.GetCurrentUser().User;
+                var listNovel = _app.UserNovelList(user).ToList();
+                return JsonHelper.Instance.Serialize(listNovel);
+            }
+            catch (Exception ex)
+            {
+                Result.Code = 500;
+                Result.Message = ex.ToString();
+            }
+            return JsonHelper.Instance.Serialize(Result);
         }
 
         public string GetChapterList(string novelId)
         {
-            var listChapter = _app.GetChapterList(novelId);
-
-            return JsonHelper.Instance.Serialize(listChapter);
+            try
+            {
+                var listChapter = _app.GetChapterList(novelId);
+                return JsonHelper.Instance.Serialize(listChapter);
+            }
+            catch (Exception ex)
+            {
+                Result.Code = 500;
+                Result.Message = ex.ToString();
+            }
+            return JsonHelper.Instance.Serialize(Result);
         }
 
         public String DeleteNovel(string[] ids)

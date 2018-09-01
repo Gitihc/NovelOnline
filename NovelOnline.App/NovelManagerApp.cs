@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NovelOnline.App
 {
@@ -67,6 +69,11 @@ namespace NovelOnline.App
         {
             Repository.Update(model);
         }
+
+        public void UpdateState(string novelId, int state)
+        {
+            Repository.Update(x => x.Id == novelId, n => new Novel { State = state });
+        }
         #endregion
 
         #region 处理Novel目录地址
@@ -78,7 +85,7 @@ namespace NovelOnline.App
         #endregion
 
         #region 处理上传本地文件
-        public void HandLocalFiles(User user, IFormFile file, string saveBookPath)
+        public async void HandLocalFiles(User user, IFormFile file, string saveBookPath)
         {
             var novelId = Guid.NewGuid().ToString();
             saveBookPath = Path.Combine(saveBookPath, novelId);
@@ -104,8 +111,22 @@ namespace NovelOnline.App
                 OriginLink = "",
             });
             _userNovelApp.AddRelationShip(user.Id, user.Name, novelId, filename);
-            var listChapter = _chapterManager.AutoMatchSubchapter(novelId);
-            _chapterManager.AddRandChapter(novelId, listChapter);
+
+            await Task.Run(() =>
+             {
+                 try
+                 {
+                     var _tmpChapterManager = AutofacExt.GetFromFac<ChapterManagerApp>();
+                     var listChapter = _tmpChapterManager.AutoMatchSubchapter(novelId);
+                     _tmpChapterManager.AddRandChapter(novelId, listChapter);
+                     var _tmpNovelManager = AutofacExt.GetFromFac<NovelManagerApp>();
+                     _tmpNovelManager.UpdateState(novelId, 1);
+                 }
+                 catch (Exception ex)
+                 {
+                     throw ex;
+                 }
+             });
         }
         #endregion
     }

@@ -5,6 +5,10 @@
 	<RuntimeFrameworkVersion>2.0.6</RuntimeFrameworkVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Views\WebsiteManager\" />
     <Folder Include="wwwroot\images\" />

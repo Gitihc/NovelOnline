@@ -20,9 +20,8 @@ $(function () {
 //#region "获取章节内容"
 function getContent() {
     if (chapterId == undefined || chapterId.length == 0) {
-        var nid = getCookie('curNovelId');
-        var cid = getCookie('curChapterId');
-        if (nid == novelId) {
+        var cid = getCookie(novelId);
+        if (cid && cid.length > 0) {
             chapterId = cid;
         }
     }
@@ -30,10 +29,11 @@ function getContent() {
 }
 
 function getChapterContent(novelId, chapterId) {
+    //if (chapterId == undefined || chapterId.length <= 0) return;
     $.ajax({
         url: "/ChapterManager/GetChapterContent",
-        async: true,
         data: { novelId: novelId, chapterId: chapterId },
+        async: true,
         success: function (data) {
             if (data) {
                 var obj = $.parseJSON(data);
@@ -44,7 +44,7 @@ function getChapterContent(novelId, chapterId) {
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(message);
+            alert("获取内容失败！");
         }
     })
 }
@@ -54,7 +54,7 @@ function getChapterContent(novelId, chapterId) {
 function getChapters() {
     $.ajax({
         url: "/NovelManager/GetChapterList",
-        data: { novelId: novelId},
+        data: { novelId: novelId },
         async: true,
         success: function (data) {
             if (data) {
@@ -79,7 +79,7 @@ function getChapters() {
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(message);
+            alert("获取目录失败！");
         }
     })
 }
@@ -157,11 +157,11 @@ function bindBtnEvent() {
         var panel = $(".panel-wrap").eq(curIndex);
         var cls = $(curTarget).attr('class');
         if (cls == "act") {
-            $(curTarget).removeClass('act');
             $(panel).css("display", "none");
+            $(curTarget).removeClass('act');
         } else {
-            $(curTarget).addClass('act');
             $(panel).css("display", "block");
+            $(curTarget).addClass('act');
         }
 
         switch (curIndex) {
@@ -250,8 +250,7 @@ function jumpChapter(e) {
 function gotoChapter(cgid, bgid) {
     cid = cgid;
     nid = bgid;
-    setCookie("curNovelId", cid);
-    setCookie("curChapterId", cid);
+    setCookie(nid, cid);
     var href = '/ChapterManager/ChapterView?id=' + nid + '&chapterId=' + cid + "&ft=" + fromType;
     window.top.location.href = href;
 }

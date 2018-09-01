@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Z.EntityFramework.Plus;
 
 namespace Repository
 {
@@ -109,6 +110,18 @@ namespace Repository
                 Save();
             return entity;
         }
+
+        /// <summary>
+        /// 实现按需要只更新部分更新
+        /// <para>如：Update(u =>u.Id==1,u =>new User{Name="ok"});</para>
+        /// </summary>
+        /// <param name="where">The where.</param>
+        /// <param name="entity">The entity.</param>
+        public void Update(Expression<Func<T, bool>> where, Expression<Func<T, T>> entity)
+        {
+            _dbContext.Set<T>().Where(where).Update(entity);
+        }
+
         private void EntityToEntity(T pTargetObjSrc, T pTargetObjDest)
         {
             foreach (var mItem in typeof(T).GetProperties())

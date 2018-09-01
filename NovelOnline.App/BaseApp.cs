@@ -32,7 +32,7 @@ namespace NovelOnline.App
             UnitWork = unitWork;
             Repository = repository;
         }
-        
+
         /// <summary>
         /// 按id批量删除
         /// </summary>

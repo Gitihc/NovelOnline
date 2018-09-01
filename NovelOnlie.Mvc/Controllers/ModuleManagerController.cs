@@ -80,7 +80,7 @@ namespace NovelOnlie.Mvc.Controllers
         {
             try
             {
-                if(string.IsNullOrEmpty(model.ParentId))
+                if (string.IsNullOrEmpty(model.ParentId))
                 {
                     model.ParentId = Guid.Empty.ToString();
                 }

@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/NovelOnlie.Mvc",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:53715/",
       "sslPort": 0
