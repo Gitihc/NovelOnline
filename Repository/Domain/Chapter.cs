@@ -14,6 +14,9 @@ namespace Repository.Domain
         {
             Id = Guid.NewGuid().ToString();
             OriginLink = "";
+            State = 0;
+            ChapterStartPosition = 0;
+            ChapterEndPosition = 0;
         }
         /// <summary>
         /// 书籍id

@@ -1,0 +1,47 @@
+﻿@section header
+    {
+    <link href="~/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    @*<link href="~/easyui/themes/default/easyui.css" rel="stylesheet" />*@
+    <link href="~/easyui/themes/icon.css" rel="stylesheet" />
+    <style>
+        .layui-elem-quote {
+            margin-bottom: 2px;
+            padding: 5px;
+            border-bottom: 1px solid #009688;
+        }
+
+        button i {
+            margin-right: 5px;
+        }
+
+        .combo {
+            border-radius: 0px;
+            height: 36px;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .panel-htop {
+            z-index: 29891015 !important;
+        }
+    </style>
+}
+<blockquote class="layui-elem-quote news_search toolList" id="menus">
+    <button data-type="btnRefresh" class="layui-btn layui-btn-small layui-btn-normal" undefined=""><i class="fa fa-refresh"></i>刷新</button>
+    <button data-type="btnAddInMyNovel" class="layui-btn layui-btn-small layui-btn-normal" undefined=""><i class="fa fa-cog"></i>添加到我的书架</button>
+    <button data-type="btnReomve" class="layui-btn layui-btn-small layui-btn-danger" undefined=""><i class="fa fa-cog"></i>删除</button>
+    <div style="display:inline-block;float: left;margin-right: 10px;">
+        <input type="text" id="key" name="key" lay - verify="key" autocomplete="off" placeholder="请输名称或作者" class="layui-input" style="width:290px;float:left;" />
+        <button class="layui-btn" data-type="btnSearch" lay-filter="btnSearch">搜索</button>
+    </div>
+</blockquote>
+<div class="layui-row" style="height:730px;">
+    <div class="layui-col-xs12">
+        <table id="table" style="height:730px;"></table>
+    </div>
+</div>
+
+<script src="~/layui/layui.js"></script>
+<script src="~/easyui/jquery.min.js"></script>
+<script src="~/easyui/jquery.easyui.min.js"></script>
+<script src="~/userjs/websitenovel.js"></script>
+

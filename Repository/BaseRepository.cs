@@ -253,6 +253,11 @@ namespace Repository
         {
             return _dbContext.ChapterQuery.FromSql(sql);
         }
+
+        public IQueryable<WebsiteNovel> WebsiteNovelQueryFromSql(string sql)
+        {
+            return _dbContext.WebsiteNovelQuery.FromSql(sql);
+        }
     }
 
     /// <summary>

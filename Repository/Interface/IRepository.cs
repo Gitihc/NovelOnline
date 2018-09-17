@@ -114,6 +114,9 @@ namespace Repository.Interface
         object ExecuteScalar(string sql);
 
         IQueryable<Chapter> ChapterQueryFromSql(string sql);
+
+        IQueryable<WebsiteNovel> WebsiteNovelQueryFromSql(string sql);
+
     }
 
     /// <summary>

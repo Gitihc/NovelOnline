@@ -1,14 +1,13 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NovelOnline.App;
+using NovelOnline.App.AutoMapper;
 using Repository;
 using System;
-using System.Reflection;
 
 namespace NovelOnlie.Mvc
 {
@@ -28,6 +27,7 @@ namespace NovelOnlie.Mvc
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+
             services.AddMvc();
 
             var sqlConnectionString = Configuration.GetConnectionString("Default");
@@ -48,7 +48,7 @@ namespace NovelOnlie.Mvc
             {
                 app.UseExceptionHandler("/Shared/Error");
             }
-
+            
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
@@ -57,6 +57,8 @@ namespace NovelOnlie.Mvc
                     template: "{controller=Account}/{action=Index}/{id?}");
             });
             SendData.Initialize(app.ApplicationServices.CreateScope().ServiceProvider);
+
+            AutoMapperConfiguration.Configure();
         }
     }
 }

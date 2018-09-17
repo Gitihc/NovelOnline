@@ -162,7 +162,7 @@
         }
         , btnDelMenu: function () {
             var rows = gridOfBtnGrid.datagrid("getChecked");
-            openauth.del("/ModuleManager/",
+            openauth.del("/ModuleManager/DelMenu",
                 rows.map(function (r) { return r.Id; }),
                 function () {
                     reloadGridOfBtnGrid();
@@ -191,10 +191,10 @@ function initTree() {
             reloadGridOfTreeGrid();
         }
         , loadFilter: function (data, parent) {
-            var root = { id: '', text: '根节点', children: data };
-            var filterData = [];
-            filterData.push(root);
-            return filterData;
+            //var root = { id: '', text: '根节点', children: data };
+            //var filterData = [];
+            //filterData.push(root);
+            return data;
         }
         , onLoadSuccess: function (node, data) {
             if (data.length > 0) {

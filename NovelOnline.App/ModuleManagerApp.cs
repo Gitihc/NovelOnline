@@ -53,7 +53,7 @@ namespace NovelOnline.App
         }
         #endregion
         #endregion
-        
+
         #region 菜单
         /// <summary>
         /// 根据某用户ID获取可访问某模块的菜单项
@@ -94,6 +94,7 @@ namespace NovelOnline.App
         public void DelMenu(string[] ids)
         {
             UnitWork.Delete<ModuleElement>(u => ids.Contains(u.Id));
+            UnitWork.Save();
         }
 
         public void AddMenu(ModuleElement model)
@@ -125,6 +126,6 @@ namespace NovelOnline.App
         }
 
         #endregion
-        
+
     }
 }

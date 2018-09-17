@@ -1,0 +1,65 @@
+﻿@section header
+    {
+    <link href="~/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    @*<link href="~/easyui/themes/default/easyui.css" rel="stylesheet" />*@
+    <link href="~/easyui/themes/icon.css" rel="stylesheet" />
+    <style>
+        .layui-elem-quote {
+            margin-bottom: 2px;
+            padding: 5px;
+            border-bottom: 1px solid #009688;
+        }
+
+        button i {
+            margin-right: 5px;
+        }
+
+        .combo {
+            border-radius: 0px;
+            height: 36px;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .panel-htop {
+            z-index: 29891015 !important;
+        }
+
+        .layui-btn {
+            margin-left: 10px;
+        }
+    </style>
+}
+<blockquote class="layui-elem-quote news_search toolList" id="menus"></blockquote>
+<div class="layui-row" style="height:730px;">
+    <div class="layui-col-xs12">
+        <table id="table" style="height:730px;"></table>
+    </div>
+</div>
+
+<!--Novel添加窗口-->
+
+<div id="divAdd" class="layui-tab" style="display:none">
+    <ul class="layui-tab-title">
+        <li class="layui-this">添加地址</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <input type="text" name="ListLink" required lay-verify="required" autocomplete="off" placeholder="请输入目录地址" class="layui-input">
+                </div>
+                <div class="layui-form-item" style="float:right;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="submint_link">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/layui/layui.js"></script>
+<script src="~/easyui/jquery.min.js"></script>
+<script src="~/easyui/jquery.easyui.min.js"></script>
+<script src="~/userjs/localnovellist.js"></script>
+

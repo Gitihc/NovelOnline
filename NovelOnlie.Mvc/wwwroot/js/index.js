@@ -1,10 +1,10 @@
-﻿var $, tab;
+﻿var $, tab, element;
 layui.config({ base: "/js/" }).use(['bodyTab', 'form', 'table', 'layer', 'element', 'jquery'], function () {
     var form = layui.form,
-        element = layui.element,
         layer = layui.layer,
         table = layui.table;
     $ = layui.jquery;
+    element = layui.element;
 
     tab = layui.bodyTab({
         openTabNum: "50",  //最大可打开窗口数量
@@ -42,6 +42,7 @@ layui.config({ base: "/js/" }).use(['bodyTab', 'form', 'table', 'layer', 'elemen
 
     //关闭其他
     $(".closePageOther").on("click", function () {
+        debugger
         if ($("#top_tabs li").length > 2 && $("#top_tabs li.layui-this cite").text() != "后台首页") {
             var menu = JSON.parse(window.sessionStorage.getItem("menu"));
             $("#top_tabs li").each(function () {

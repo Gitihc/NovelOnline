@@ -10,7 +10,7 @@
 
     var openauth = layui.openauth;
 
-    $("#menus").loadMenus("NovelList");
+    $("#menus").loadMenus("MyNovelList");
 
     //#region "编辑对话框"
     var editDlg = function () {
@@ -87,7 +87,6 @@
                         function (data) {
                             layer.msg(data.Message);
                             if (data.Code == 200) {
-                                reloadTree();
                                 layer.closeAll();
                             }
                         },
@@ -101,7 +100,6 @@
                         function (data) {
                             layer.msg(data.Message);
                             if (data.Code == 200) {
-                                reloadTree();
                                 layer.closeAll();
                             }
                         },
@@ -118,8 +116,10 @@
                     //obj.preview(function (index, file, result) {
                     //    $('#demo1').attr('src', result); //图片链接（base64）
                     //});
+                    $("#localfile").html("正在上传中...");
                 }
                 , done: function (res) {
+                    $("#localfile").html("上传本地文件");
                     if (res.Code == 200) {
                         layer.closeAll();
                         reloadGridOfTable();
@@ -165,6 +165,51 @@
                     reloadGridOfTable();
                 });
         }
+        , btnReload: function () {
+            reloadGridOfTable();
+        }
+        , btnReGet: function () {
+            var rows = gridOfTable.datagrid("getChecked");
+            if (!rows || rows.length != 1) {
+                layer.msg("请选择要重新加载的行，且同时只能选择一行");
+                return;
+            }
+            $.post('/NovelManager/ReGetNovel', { novelId: rows[0].Id }, function (data) {
+                if (data.Code == 200) {
+                    layer.msg("正在重新获取，请稍后刷新！");
+                    reloadGridOfTable();
+                } else {
+                    layer.msg("重新获取失败！");
+                }
+            }, 'json');
+        }
+        , btnDown: function () {
+            var rows = gridOfTable.datagrid("getChecked");
+            if (!rows || rows.length != 1) {
+                layer.msg("请选择要下载的数据，且同时只能选择一行");
+                return;
+            }
+            var row = rows[0];
+            if (row.State != 2) {
+                layer.msg("书籍未获取完成，请获取到本地再试！");
+                return;
+            }
+            var Id = row.Id;
+            var form = $("<form>");
+            form.attr('style', 'display:none');
+            form.attr('target', '');
+            form.attr('method', 'post');
+            form.attr('action', '/NovelManager/DownNovel');
+
+            var input1 = $('<input>');
+            input1.attr('type', 'hidden');
+            input1.attr('name', 'novelId');
+            input1.attr('value', Id);
+            form.append(input1);
+            form.appendTo("body")
+            form.submit();
+            form.remove();
+        }
     }
     $('.toolList .layui-btn').on('click', function () {
         var type = $(this).data('type');
@@ -182,7 +227,7 @@ var gridOfTable;
 var initTable = function () {
     gridOfTable = $("#table");
     gridOfTable.datagrid({
-        url: '/NovelManager/GetNovelList',     //获取数据地址
+        url: '/NovelManager/GetMyNovelList',     //获取数据地址
         queryParams: {},
         border: false,
         fit: false,
@@ -201,11 +246,16 @@ var initTable = function () {
         columns: [[
             { field: 'chk', title: 'chk', checkbox: true }
             , {
-                field: 'Name', title: '名称', width: 320, align: "left", halign: "center", align: "center", hidden: false, formatter: function (v, r, i) {
+                field: 'Name', title: '名称', width: 320, align: "left", halign: "center", hidden: false, formatter: function (v, r, i) {
                     return '<a href="/ChapterManager/ChapterView?id=' + r.Id + '&fromtyp=' + r.FromType + '" target="_blank">' + r.Name + '</a>';
+                    //return '<a href="###" style="color:blue;" onclick="opentWebsiteNovelList(' + i + '); return;">' + v + '</a>';
                 }
             }
-            , { field: 'OriginLink', title: '源始地址', width: 180, align: "center", halign: "center" }
+            , {
+                field: 'OriginLink', title: '源始地址', width: 180, align: "center", halign: "center", formatter: function (v, r, i) {
+                    return '<a href="' + v + '" target="_blank" style="color:blue;">源始地址</a>';
+                }
+            }
             , { field: 'FromType', title: '来源', width: 100, align: "center", halign: "center", formatter: function (v, r, i) { return v == 0 ? "本地" : "网络"; } }
             , {
                 field: 'State', title: '状态', width: 100, align: "center", halign: "center", formatter: function (v, r, i) {
@@ -240,6 +290,12 @@ var initTable = function () {
                 }
             }
             , { field: 'CreateDate', title: '创建时间', width: 150, align: "center", halign: "center" }
+            , {
+                field: '_operater', title: '操作', width: 150, align: "center", halign: "center", formatter: function (v, r, i) {
+                    var m = '<i title="目录" class="fa fa-binoculars" style="color: #386;margin-left: 10px;" onclick="showChapterList(' + i + ')" ></i>';
+                    return m;
+                }
+            }
         ]],
         onClickRow: function (rowIndex, rowData) {
 
@@ -307,4 +363,24 @@ function reloadGridOfTable() {
     gridOfTable.datagrid("reload");
 }
 
+function showChapterList(index) {
+    var row = gridOfTable.datagrid("selectRow", index).datagrid("getSelected");
+    if (row) {
+        var title = '<cite>' + row.Name + '</cite><i class="layui-icon layui-unselect layui-tab-close" data-id="2">ဆ</i>';
+        var id = row.Id;
+        var fromType = row.FromType;
+        var content = "<iframe src='/ChapterManager/ChapterList?id=" + id + "&fromType=" + fromType + "' data-id='" + id + "'></frame>";
+        var tabFilter = 'bodyTab';
+        if (window.top.tab.hasTab(row.Name) == -1) {
+            window.top.element.tabAdd(tabFilter, {
+                title: title
+                , content: content //支持传入html
+                , id: id
+            });
+            window.top.element.tabChange(tabFilter, row.Id);
+        } else {
+            window.top.element.tabChange(tabFilter, row.Id);
+        }
+    }
+}
 //#endregion

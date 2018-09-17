@@ -30,16 +30,21 @@ function getContent() {
 
 function getChapterContent(novelId, chapterId) {
     //if (chapterId == undefined || chapterId.length <= 0) return;
+    $("#content").html('<h2>正获取中，请稍等一会儿!</h2>');
     $.ajax({
         url: "/ChapterManager/GetChapterContent",
         data: { novelId: novelId, chapterId: chapterId },
         async: true,
-        success: function (data) {
-            if (data) {
-                var obj = $.parseJSON(data);
-                if (obj) {
+        dataType: 'json',
+        success: function (result) {
+            if (result) {
+                if (result.Code == 200) {
+                    var obj = $.parseJSON(result.Data);
                     $("#title").html(base64decodeCN(obj.Title));
                     $("#content").html(base64decodeCN(obj.Content));
+                } else {
+                    var message = result.Message;
+                    $("#content").html(message);
                 }
             }
         },

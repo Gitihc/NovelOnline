@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,12 @@ namespace NovelOnlie.Mvc.Controllers
     public class NovelManagerController : BaseController
     {
         private readonly NovelManagerApp _app;
+        private readonly WebsiteApp _websiteApp;
         private IHostingEnvironment _hostingEnv;
-        public NovelManagerController(IAuth authUtil, NovelManagerApp app, IHostingEnvironment hostingEnv) : base(authUtil)
+        public NovelManagerController(IAuth authUtil, NovelManagerApp app, WebsiteApp websiteApp, IHostingEnvironment hostingEnv) : base(authUtil)
         {
             _app = app;
+            _websiteApp = websiteApp;
             _hostingEnv = hostingEnv;
         }
 
@@ -26,8 +29,16 @@ namespace NovelOnlie.Mvc.Controllers
         {
             return View();
         }
-
-        public string GetNovelList()
+        [Authenticate]
+        public IActionResult LocalNovelList()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取我的书籍列表
+        /// </summary>
+        /// <returns></returns>
+        public string GetMyNovelList()
         {
             try
             {
@@ -41,6 +52,34 @@ namespace NovelOnlie.Mvc.Controllers
                 Result.Message = ex.ToString();
             }
             return JsonHelper.Instance.Serialize(Result);
+        }
+        /// <summary>
+        /// 获取书籍列表
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetNovelList(int page, int rows, string key)
+        {
+            try
+            {
+                var pageSize = rows;
+                var allNovel = _app.GetAllNovel().ToList();
+                if (!string.IsNullOrEmpty(key))
+                {
+                    allNovel = (from p in allNovel where p.Name.Contains(key) select p).ToList();
+                }
+                var total = allNovel.Count();
+                var r = allNovel.Skip((page - 1) * pageSize).Take(pageSize);
+                var result = new { total = total, rows = r };
+                return JsonHelper.Instance.Serialize(result);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return string.Empty;
         }
 
         public string GetChapterList(string novelId)
@@ -98,7 +137,28 @@ namespace NovelOnlie.Mvc.Controllers
         {
             try
             {
+                var user = _authUtil.GetCurrentUser().User;
+                _app.GetWebsiteNovel(user, ListLink, string.Empty);
+            }
+            catch (Exception ex)
+            {
 
+                Result.Code = 500;
+                Result.Message = ex.InnerException?.Message ?? ex.Message;
+            }
+            return JsonHelper.Instance.Serialize(Result);
+        }
+
+        public string ReGetNovel(string novelId)
+        {
+            try
+            {
+                var result = _app.ReGetWebsiteNovel(novelId);
+                if (!result)
+                {
+                    Result.Code = 500;
+                    Result.Message = "获取失败！";
+                }
             }
             catch (Exception ex)
             {
@@ -114,7 +174,13 @@ namespace NovelOnlie.Mvc.Controllers
         {
             try
             {
-
+                var user = _authUtil.GetCurrentUser().User;
+                bool result = _websiteApp.Search(user, websiteLink);
+                if (!result)
+                {
+                    Result.Code = 500;
+                    Result.Message = "搜索任务失败或资源列表中已存在！";
+                }
             }
             catch (Exception ex)
             {
@@ -148,5 +214,41 @@ namespace NovelOnlie.Mvc.Controllers
             }
             return JsonHelper.Instance.Serialize(Result);
         }
+
+        #region 本地书籍列表按钮事件
+        public string AddLocalNovelInMyNovel(string novelId)
+        {
+            try
+            {
+                User user = _authUtil.GetCurrentUser().User;
+                Novel novel = _app.GetNovel(novelId);
+                _app.AddLocalNovelInMyNovel(user, novel);
+            }
+            catch (Exception ex)
+            {
+                Result.Code = 500;
+                Result.Message = ex.ToString();
+            }
+            return JsonHelper.Instance.Serialize(Result);
+        }
+
+        public void DownNovel(string novelId)
+        {
+            try
+            {
+                var novel = _app.GetNovel(novelId);
+                if (novel != null)
+                {
+
+                    _app.DownNovel(HttpContext, novel);
+                }
+            }
+            catch (Exception ex)
+            {
+                Result.Code = 500;
+                Result.Message = ex.ToString();
+            }
+        }
+        #endregion
     }
 }

@@ -54,7 +54,7 @@ namespace NovelOnline.App
                     module.Elements = usermoduleelements.Where(u => u.ModuleId == module.Id).ToList();
                 }
 
-                return modules;
+                return modules.OrderBy(x => x.Sort).ToList();
             }
         }
 

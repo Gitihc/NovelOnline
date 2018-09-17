@@ -21,26 +21,27 @@ namespace NovelOnline.App
         {
             get
             {
-                var modules = (from module in UnitWork.Find<Module>(null) select new ModuleView
-                {
-                    Id= module.Id,
-                    Name = module.Name,
-                    CascadeId = module.CascadeId,
-                    ParentId = module.ParentId,
-                    ParentName = module.ParentName,
-                    Code = module.Code,
-                    Type = module.Type,
-                    Link = module.Link,
-                    Icon = module.Icon,
-                    IsEnable = module.IsEnable,
-                    Sort = module.Sort,
-                    CreateDate = module.CreateDate
-                }).ToList();
+                var modules = (from module in UnitWork.Find<Module>(null)
+                               select new ModuleView
+                               {
+                                   Id = module.Id,
+                                   Name = module.Name,
+                                   CascadeId = module.CascadeId,
+                                   ParentId = module.ParentId,
+                                   ParentName = module.ParentName,
+                                   Code = module.Code,
+                                   Type = module.Type,
+                                   Link = module.Link,
+                                   Icon = module.Icon,
+                                   IsEnable = module.IsEnable,
+                                   Sort = module.Sort,
+                                   CreateDate = module.CreateDate
+                               }).ToList();
                 foreach (var module in modules)
                 {
                     module.Elements = UnitWork.Find<ModuleElement>(u => u.ModuleId == module.Id).ToList();
                 }
-                return modules;
+                return modules.OrderBy(x => x.Sort).ToList();
             }
         }
 

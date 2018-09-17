@@ -41,6 +41,7 @@ layui.define("jquery", function (exports) {
                                 var Class = element.Class ? element.Class : 'layui-btn-normal';
                                 sb += ("<button " + " data-type='" + element.DomId +
                                     "' " + " class='layui-btn layui-btn-small " + Class +
+                                    "' " + " id='" + element.DomId +
                                     "' " + element.Attr + ">");
 
                                 if (element.Icon != null && element.Icon != '') {

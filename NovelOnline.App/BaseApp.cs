@@ -25,7 +25,7 @@ namespace NovelOnline.App
         /// </summary>
         /// <value>The repository.</value>
         public IRepository<T> Repository;
-
+        
         public BaseApp(IUnitWork unitWork, IRepository<T> repository)
         //public BaseApp(IUnitWork unitWork)
         {

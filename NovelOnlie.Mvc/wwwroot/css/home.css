@@ -18,6 +18,8 @@
 .layui-tab-title li cite { font-style: normal; padding-left: 5px; }
 
 /*顶部*/
+#top_tabs_box{ padding-right:138px; height:40px; border-bottom:1px solid #e2e2e2; }
+#top_tabs{ position: absolute; border-bottom:none;}
 .layui-layout-admin .layui-main { margin: 0; } 
 .logo { color: #fff; float: left; line-height: 50px; font-size: 20px; padding: 0 25px; text-align: center; width: 150px; }
 .top_menu { position: absolute; right: 0; background: none; } 

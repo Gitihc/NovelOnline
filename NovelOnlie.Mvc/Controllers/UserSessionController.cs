@@ -28,13 +28,13 @@ namespace NovelOnlie.Mvc.Controllers
         /// </summary>
         public string GetModulesTree()
         {
-            var moduleTree = _authStrategyContext.Modules.GenerateTree(u => u.Id, u => u.ParentId,Guid.Empty.ToString());
+            var moduleTree = _authStrategyContext.Modules.GenerateTree(u => u.Id, u => u.ParentId, Guid.Empty.ToString());
             return JsonHelper.Instance.Serialize(moduleTree);
         }
 
         public string GetModulesComboTree()
         {
-            var listObject = GetTree(_authStrategyContext.Modules, Guid.Empty.ToString());
+            var listObject = GetTree(_authStrategyContext.Modules, string.Empty);
             return JsonHelper.Instance.Serialize(listObject);
         }
 
@@ -72,7 +72,7 @@ namespace NovelOnlie.Mvc.Controllers
                 cascadeId = obj.CascadeId;
             }
 
-            var query = _authStrategyContext.Modules.Where(u => u.CascadeId.Contains(cascadeId));
+            var query = _authStrategyContext.Modules.Where(u => u.CascadeId.Contains(cascadeId)).OrderBy(x => x.Sort);
 
             return JsonHelper.Instance.Serialize(query);
         }

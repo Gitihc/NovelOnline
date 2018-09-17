@@ -43,6 +43,7 @@ namespace Repository.Interface
         /// 更新一个实体的所有属性
         /// </summary>
         void Update<T>(T entity) where T:class;
+        
 
         void Delete<T>(T entity) where T:class;
 

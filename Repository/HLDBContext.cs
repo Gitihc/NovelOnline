@@ -16,6 +16,8 @@ namespace Repository
         }
 
         public DbQuery<Chapter> ChapterQuery { get; set; }
+        public DbQuery<WebsiteNovel> WebsiteNovelQuery { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //builder.Entity<User>().ToTable("User");
