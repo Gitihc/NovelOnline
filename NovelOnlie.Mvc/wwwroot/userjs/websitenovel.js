@@ -131,6 +131,7 @@ var initTable = function () {
                     };
                     return txtState;
                 }
+                , hidden: true
             }
             , { field: 'CreateDate', title: '创建时间', width: 180, align: "center", halign: "center" }
             , {

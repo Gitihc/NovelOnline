@@ -10,8 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Properties\PublishProfiles\**" />
+    <Content Remove="Properties\PublishProfiles\**" />
+    <EmbeddedResource Remove="Properties\PublishProfiles\**" />
+    <None Remove="Properties\PublishProfiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\images\" />
-    <Folder Include="Models\" />
     <Folder Include="wwwroot\easyui\" />
   </ItemGroup>
 
@@ -24,6 +30,12 @@
   <ItemGroup>
     <ProjectReference Include="..\NovelOnline.App\NovelOnline.App.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Html2Article">
+      <HintPath>..\LWXSLWXSLibrary\bin\Debug\netcoreapp2.0\Html2Article.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

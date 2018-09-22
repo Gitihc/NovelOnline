@@ -4,17 +4,24 @@ function getUrlParam(name) {
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
 }
-//#endregion
+//#endregionvar preChapterId = "";
+var nextChapterId = "";
+var curChapterId = "";
 var novelId, chapterId, fromType;
+
 $(function () {
     novelId = getUrlParam("id");
     chapterId = getUrlParam("chapterId");
     fromType = getUrlParam("fromtyp");
+
+    curChapterId = chapterId;
+
     getChapters();
     getContent();
     initWindowScroll();
     goTop();
     bindBtnEvent();
+
 });
 
 //#region "获取章节内容"
@@ -42,6 +49,7 @@ function getChapterContent(novelId, chapterId) {
                     var obj = $.parseJSON(result.Data);
                     $("#title").html(base64decodeCN(obj.Title));
                     $("#content").html(base64decodeCN(obj.Content));
+                    setPageTheme();
                 } else {
                     var message = result.Message;
                     $("#content").html(message);
@@ -73,6 +81,19 @@ function getChapters() {
                         var cguid = chapter.Id;
                         var name = chapter.Name;
                         newCatalog += '<li><a href="##" novelId="' + novelId + '" chapterId="' + cguid + '" onclick="jumpChapter()">' + name + '</a> </li>'
+
+                        if (chapter.Id == curChapterId) {
+                            if (i - 1 >= 0) {
+                                preChapterId = bookChapter[i - 1].Id;
+                            } else {
+                                preChapterId = "";
+                            }
+                            if (i + 1 < bookChapter.length) {
+                                nextChapterId = bookChapter[i + 1].Id;
+                            } else {
+                                nextChapterId = "";
+                            }
+                        }
                     }
 
                     //新目录
@@ -80,6 +101,7 @@ function getChapters() {
                     $("#CatalogContainer ul").html(newCatalog);
 
                     clickChapterEvent();
+                    setBtnPreNextChapter();
                 }
             }
         },
@@ -189,6 +211,7 @@ function bindSetupEvent() {
         $(this).addClass("act");
         var index = $(this).index();
         $("body").removeClass().addClass("theme-" + (index - 1));
+        setCookie("ThemeChapterView", "theme-" + (index - 1));
     });
 
     $(".setting-list-wrap ul .font-family>span").bind("click", function () {
@@ -196,6 +219,7 @@ function bindSetupEvent() {
         $(this).addClass("act");
         var index = $(this).index();
         $("#content").removeClass().addClass("row").addClass("font-family0" + index);
+        setCookie("FontChapterView", "font-family0" + index);
     })
 
     $(".font-size .prev,.font-size .next").bind("click", function () {
@@ -217,12 +241,38 @@ function bindSetupEvent() {
             }
             $(".font-size .lang").html(size);
             $("#content p").css("font-size", size);
+            setCookie("FontSizeChapterView", size);
         }
     });
 
     clickCloseChapterMenu();
 }
 //#endregion
+
+function setPageTheme() {
+    var theme = getCookie("ThemeChapterView");
+    var font = getCookie("FontChapterView");
+    var fontsize = getCookie("FontSizeChapterView");
+    if (theme) {
+        $("body").removeClass().addClass(theme);
+        var tmpStr = theme.replace('theme-', '');
+        var index = parseInt(tmpStr);
+        $(".setting-list-wrap ul .theme-list>span").removeClass("act");
+        $(".setting-list-wrap ul .theme-list>span").eq(index).addClass("act");
+    }
+    if (font) {
+        $("#content").removeClass().addClass("row").addClass(font);
+        var tmpStr = font.replace('font-family0', '');
+        var index = parseInt(tmpStr) - 1;
+        $(".setting-list-wrap ul .font-family>span").removeClass("act");
+        $(".setting-list-wrap ul .font-family>span").eq(index).addClass("act");
+    }
+    if (fontsize) {
+        $(".font-size .lang").html(fontsize);
+        $("#content p").css("font-size", fontsize);
+        $(".font-size .lang").html(fontsize);
+    }
+}
 
 //#region "目录菜单绑定事件"
 function clickChapterEvent() {
@@ -258,6 +308,27 @@ function gotoChapter(cgid, bgid) {
     setCookie(nid, cid);
     var href = '/ChapterManager/ChapterView?id=' + nid + '&chapterId=' + cid + "&ft=" + fromType;
     window.top.location.href = href;
+}
+
+function setBtnPreNextChapter() {
+    if (preChapterId.length > 0) {
+        $("#btn_preChapter").removeClass("disabled")
+    }
+    if (nextChapterId.length > 0) {
+        $("#btn_nextChapter").removeClass("disabled")
+    }
+}
+
+function preChapter() {
+    if (preChapterId.length > 0) {
+        gotoChapter(preChapterId, novelId);
+    }
+}
+
+function nextChapter() {
+    if (nextChapterId.length > 0) {
+        gotoChapter(nextChapterId, novelId);
+    }
 }
 
 //#region "设置cookie"

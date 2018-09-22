@@ -6,10 +6,17 @@ layui.config({ base: "/js/" }).use(['bodyTab', 'form', 'table', 'layer', 'elemen
     $ = layui.jquery;
     element = layui.element;
 
+    $.get('/UserSession/GetUserName',
+        function (data) {
+            $("#username").html(data);
+            $("#usernametop").html(data);
+        });
+
     tab = layui.bodyTab({
         openTabNum: "50",  //最大可打开窗口数量
         url: "/UserSession/GetModulesTree" //获取菜单json地址
     });
+
 
     //隐藏左侧导航
     $(".hideMenu").click(function () {

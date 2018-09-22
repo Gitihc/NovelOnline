@@ -13,7 +13,8 @@ namespace BaseLibrary
         /// <summary>
         /// 插件路径
         /// </summary>
-        public static string dllPlusPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dllplus\netcoreapp2.0");
+        //public static string dllPlusPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dllplus\netcoreapp2.0");
+        public static string dllPlusPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dllplus");
         /// <summary>
         /// 插件容器
         /// </summary>
@@ -41,8 +42,8 @@ namespace BaseLibrary
                     {
                     }
                 }
-                if (pe!=null)
-                    obj =(INVBase) GetInstance(pe.Type);
+                if (pe != null)
+                    obj = (INVBase)GetInstance(pe.Type);
             }
             return obj;
         }
@@ -67,10 +68,10 @@ namespace BaseLibrary
                 _dllPlusList = value;
             }
         }
-       /// <summary>
-       /// 加载插件集合
-       /// </summary>
-       /// <returns></returns>
+        /// <summary>
+        /// 加载插件集合
+        /// </summary>
+        /// <returns></returns>
         public static List<DllPlusInfo> LoadDllPlusList()
         {
             if (_dllPlusList.Count > 0)

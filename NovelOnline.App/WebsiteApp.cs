@@ -26,44 +26,54 @@ namespace NovelOnline.App
                 if (count > 0) return false;
                 var objNVB = NVHelper.NVBaseObject(url);
                 if (objNVB == null) return false;
-
-                WebSearchHelper.SpecRegStr = objNVB.GetSpecRegex();
-                WebSearchHelper.GetNovelInfo += objNVB.GetNovelInfo;
-                WebSearchHelper.Search(url);
-
-                string guid = Guid.NewGuid().ToString();
-                Repository.Add(new Website { Id = guid, Name = "新的搜索任务", OriginLink = url, CreatorId = user.Id });
                 ThreadPool.QueueUserWorkItem(x =>
                 {
+                    var websiteNovelApp = AutofacExt.GetFromFac<WebsiteNovelApp>();
+                    var websiteApp = AutofacExt.GetFromFac<WebsiteApp>();
+                    var webSearchHelper = new WebSearchHelper();
+                    webSearchHelper.SpecRegStr = objNVB.GetSpecRegex();
+                    webSearchHelper.GetNovelInfo += objNVB.GetNovelInfo;
+                    webSearchHelper.Search(url);
+
+                    string guid = Guid.NewGuid().ToString();
+                    websiteApp.Repository.Add(new Website { Id = guid, Name = "新的搜索任务", OriginLink = url, CreatorId = user.Id });
+                    var websiteId = guid;
+
+                    ThreadPool.QueueUserWorkItem(m =>
+                    {
+                        CheckWebsiteState(websiteId, websiteApp, ref webSearchHelper);
+                    });
+
                     try
                     {
-                        var websiteNovelApp = AutofacExt.GetFromFac<WebsiteNovelApp>();
+                        websiteApp.UpdateState(websiteId, 1);
                         while (true)
                         {
-                            if (WebSearchHelper.IsAllDone)
+                            if (webSearchHelper.IsAllDone)
                             {
-                                Repository.Update(m => m.Id == guid, n => new Website { State = 1 });
+                                websiteApp.UpdateState(websiteId, 2);
                                 break;
                             }
                             Thread.Sleep(100);
 
-                            if (WebSearchHelper.WebSiteBookInfoQueue.Count > 0)
+                            if (webSearchHelper.WebSiteBookInfoQueue.Count > 0)
                             {
-                                NVNovel nVNovel = (NVNovel)WebSearchHelper.WebSiteBookInfoQueue.Dequeue();
+                                NVNovel nVNovel = (NVNovel)webSearchHelper.WebSiteBookInfoQueue.Dequeue();
                                 if (nVNovel != null)
                                 {
-                                    nVNovel.WebsiteId = guid;
+                                    nVNovel.WebsiteId = websiteId;
                                     var websiteNovel = Mapper.Map<WebsiteNovel>(nVNovel);
-                                    websiteNovelApp.AddWebsitNovel(guid, websiteNovel);
+                                    websiteNovelApp.AddWebsitNovel(websiteId, websiteNovel);
                                 }
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        throw ex;
+                        websiteApp.UpdateState(websiteId, -1);
+                        //throw ex;
                     }
-                });
+                }, objNVB);
                 return true;
             }
             return false;
@@ -83,7 +93,91 @@ namespace NovelOnline.App
 
         public IQueryable<Website> GetWebsiteList()
         {
-            return Repository.GetAll();
+            return Repository.GetAll().OrderByDescending(x => x.CreateDate);
+        }
+
+        public bool Update(Website website)
+        {
+            Repository.Update(website);
+            return true;
+        }
+
+        public bool UpdateState(string websiteId, int state)
+        {
+            Repository.Update(x => x.Id == websiteId, n => new Website { State = state });
+            return true;
+        }
+
+        public bool ReSearch(string websiteId)
+        {
+            var website = Repository.FindSingle(x => x.Id == websiteId);
+            if (website != null)
+            {
+                var objNVB = NVHelper.NVBaseObject(website.OriginLink);
+                if (objNVB == null) return false;
+
+                ThreadPool.QueueUserWorkItem(x =>
+                {
+                    var websiteNovelApp = AutofacExt.GetFromFac<WebsiteNovelApp>();
+                    var websiteApp = AutofacExt.GetFromFac<WebsiteApp>();
+                    var webSearchHelper = new WebSearchHelper();
+                    webSearchHelper.SpecRegStr = objNVB.GetSpecRegex();
+                    webSearchHelper.GetNovelInfo += objNVB.GetNovelInfo;
+                    webSearchHelper.Search(website.OriginLink);
+                    var guid = website.Id;
+
+                    ThreadPool.QueueUserWorkItem(m =>
+                    {
+                        CheckWebsiteState(websiteId, websiteApp, ref webSearchHelper);
+                    });
+
+                    try
+                    {
+                        websiteApp.UpdateState(guid, 1);
+                        while (true)
+                        {
+                            if (webSearchHelper.IsAllDone)
+                            {
+                                websiteApp.UpdateState(guid, 2);
+                                break;
+                            }
+                            Thread.Sleep(100);
+
+                            if (webSearchHelper.WebSiteBookInfoQueue.Count > 0)
+                            {
+                                NVNovel nVNovel = (NVNovel)webSearchHelper.WebSiteBookInfoQueue.Dequeue();
+                                if (nVNovel != null)
+                                {
+                                    nVNovel.WebsiteId = guid;
+                                    var websiteNovel = Mapper.Map<WebsiteNovel>(nVNovel);
+                                    websiteNovelApp.AddWebsitNovel(guid, websiteNovel);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        websiteApp.UpdateState(guid, -1);
+                        //throw ex;
+                    }
+                });
+                return true;
+            }
+            return false;
+        }
+
+        private void CheckWebsiteState(string websiteId, WebsiteApp websiteApp, ref WebSearchHelper webSearchHelper)
+        {
+            while (true)
+            {
+                var website = websiteApp.Repository.FindSingle(x => x.Id == websiteId);
+                if (website == null) break;
+                if (website.State == 2) break;
+                if (website.State <= 0) break;
+                if (website.State == 3) { webSearchHelper.IsPause = true; break; }
+                if (website.State == 4) { webSearchHelper.IsStop = true; break; }
+                if (website.State == 1) { Thread.Sleep(10000); }
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ layui.config({
         $ = layui.jquery;
 
     element = layui.element;
+    var openauth = layui.openauth;
 
     $("#menus").loadMenus("WebsiteList");
 
@@ -28,7 +29,7 @@ layui.config({
                 }
             });
             var url2 = "/NovelManager/SearchWebsite";
-          
+
             form.on('submit(submint_website)',
                 function (data) {
                     $.post(url2,
@@ -37,6 +38,7 @@ layui.config({
                             layer.msg(data.Message);
                             if (data.Code == 200) {
                                 layer.closeAll();
+                                reloadGridOfTable();
                             }
                         },
                         "json");
@@ -50,6 +52,53 @@ layui.config({
         };
     }();
     //#endregion
+
+    //#region "编辑对话框"
+    var editDlg = function () {
+        var vm = new Vue({
+            el: "#formEdit"
+        });
+        var show = function (data) {
+            var title = "编辑Website";
+            layer.open({
+                title: title,
+                area: ["500px", "150px"],
+                type: 1,
+                content: $('#divEdit'),
+                success: function () {
+                    vm.$set('$data', data);
+                },
+                end: function () {
+
+                }
+            });
+            var url = "/WebsiteManager/ModifyWebsite";
+
+            //提交数据
+            form.on('submit(formSubmit)',
+                function (data) {
+                    $.post(url,
+                        data.field,
+                        function (data) {
+                            layer.msg(data.Message);
+                            if (data.Code == 200) {
+                                layer.closeAll();
+                                reloadGridOfTable();
+                            } else {
+                                return layer.msg('编辑失败');
+                            }
+                        },
+                        "json");
+                    return false;
+                });
+        }
+        return {
+            update: function (data) { //弹出编辑框
+                show(data);
+            }
+        };
+    }();
+    //#endregion
 
     var active = {
         btnAdd: function () {
@@ -65,7 +114,7 @@ layui.config({
         }
         , btnDel: function () {
             var rows = gridOfTable.datagrid("getChecked");
-            openauth.del("//",
+            openauth.del("/WebsiteManager/DeleteWebsite",
                 rows.map(function (r) { return r.Id; }),
                 function () {
                     reloadGridOfTable();
@@ -74,15 +123,75 @@ layui.config({
         , btnReload: function () {
             reloadGridOfTable();
         }
+        , btnStart: function () {
+            var rows = gridOfTable.datagrid("getChecked");
+            if (!rows || rows.length != 1) {
+                layer.msg("请选择操作的行，且同时只能选择一行");
+                return;
+            }
+            var row = rows[0];
+            var state = row.State;
+            if ($.inArray(state, [1, 2]) != -1) {
+                layer.msg("当前状态无法执行此操作！");
+                return;
+            }
+            var Id = row.Id;
+            $.post('/WebsiteManager/SwitchWebsite', { websiteId: Id, state: 1 }, function (data) {
+                if (data.Code == 200) {
+                    reloadGridOfTable();
+                } else {
+                    layer.msg("操作失败！");
+                }
+            }, 'json');
+        }
+        , btnPause: function () {
+            var rows = gridOfTable.datagrid("getChecked");
+            if (!rows || rows.length != 1) {
+                layer.msg("请选择操作的行，且同时只能选择一行");
+                return;
+            }
+            var row = rows[0];
+            var state = row.State;
+            if (state != 1) {
+                layer.msg("当前状态无法执行此操作！");
+                return;
+            }
+            var Id = row.Id;
+            $.post('/WebsiteManager/SwitchWebsite', { websiteId: Id, state: 3 }, function (data) {
+                if (data.Code == 200) {
+                    reloadGridOfTable();
+                } else {
+                    layer.msg("操作失败！");
+                }
+            }, 'json');
+        }
+        , btnStop: function () {
+            var rows = gridOfTable.datagrid("getChecked");
+            if (!rows || rows.length != 1) {
+                layer.msg("请选择操作的行，且同时只能选择一行");
+                return;
+            }
+            var row = rows[0];
+            var state = row.State;
+            if (state != 1) {
+                layer.msg("当前状态无法执行此操作！");
+                return;
+            }
+            var Id = row.Id;
+            $.post('/WebsiteManager/SwitchWebsite', { websiteId: Id, state: 4 }, function (data) {
+                if (data.Code == 200) {
+                    reloadGridOfTable();
+                } else {
+                    layer.msg("操作失败！");
+                }
+            }, 'json');
+        }
     }
     $('.toolList .layui-btn').on('click', function () {
         var type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
 });
-
-
-
 
 $(function () {
     initTable();
@@ -125,6 +234,9 @@ var initTable = function () {
                 field: 'State', title: '状态', width: 100, align: "center", halign: "center", formatter: function (v, r, i) {
                     var txtState = "";
                     switch (v) {
+                        case -1:
+                            txtState = "获取失败！";
+                            break;
                         case 0:
                             txtState = "未获取";
                             break;
@@ -134,18 +246,25 @@ var initTable = function () {
                         case 2:
                             txtState = "已获取";
                             break;
+                        case 3:
+                            txtState = "暂停获取";
+                            break;
+                        case 4:
+                            txtState = "停止获取";
+                            break;
                         default:
                             txtState = "其它";
                             break;
                     }
                     return txtState;
                 }
+                , hidden: false
             }
             , { field: 'CreatorId', title: '创建人', width: 150, align: "center", halign: "center", hidden: true }
             , { field: 'CreateDate', title: '创建时间', width: 150, align: "center", halign: "center" }
         ]],
         onCheck: function (rowIndex, rowData) {
-
+            setSwitchBtn();
         },
         onClickCell: function (rowIndex, field, value) {
             return;
@@ -164,7 +283,7 @@ var initTable = function () {
             bindPressEnterEndEditOfTable();
         },
         onClickRow: function (rowIndex, rowData) {
-
+            setSwitchBtn();
         },
         onAfterEdit: function (rowIndex, rowData, changes) {
             var data = JSON.stringify(changes);
@@ -246,6 +365,66 @@ function opentWebsiteNovelList(index) {
         } else {
             window.top.element.tabChange(tabFilter, row.Id);
         }
+    }
+}
+
+function reGetWebsite(index) {
+    var rows = gridOfTable.datagrid("selectRow", index).datagrid("getChecked");
+    if (!rows || rows.length != 1) {
+        layer.msg("请选择编辑的行，且同时只能编辑一行");
+        return;
+    }
+    var websiteId = rows[0].Id;
+    $.post('/WebsiteManager/ReGetWebsite', { websiteId: websiteId }, function (data) {
+        if (data.Code == 200) {
+            layer.msg("正在重新获取，请稍后刷新！");
+            reloadGridOfTable();
+        } else {
+            layer.msg("重新获取失败！");
+        }
+    }, 'json');
+}
+
+function setSwitchBtn() {
+    var rows = gridOfTable.datagrid("getChecked");
+    var selRow = gridOfTable.datagrid("getSelected");
+
+    if (!rows || rows.length != 1) {
+        if (!selRow) {
+            return;
+        }
+    }
+    var row = rows.length == 1 ? rows[0] : selRow;
+    var btnStart = $("#btnStart");
+    var btnPause = $("#btnPause");
+    var btnStop = $("#btnStop");
+
+    btnStart.addClass("layui-btn-disabled");
+    btnPause.addClass("layui-btn-disabled");
+    btnStop.addClass("layui-btn-disabled");
+    switch (row.State) {
+        case -1:
+            btnStart.removeClass("layui-btn-disabled");
+            break;
+        case 0:
+            btnStart.removeClass("layui-btn-disabled");
+            break;
+        case 1:
+            btnPause.removeClass("layui-btn-disabled");
+            btnStop.removeClass("layui-btn-disabled");
+            break;
+        case 2:
+
+            break;
+        case 3:
+            btnStart.removeClass("layui-btn-disabled");
+            btnStop.removeClass("layui-btn-disabled");
+            break;
+        case 4:
+            btnStart.removeClass("layui-btn-disabled");
+            break;
+        default:
+            break;
     }
 }
 

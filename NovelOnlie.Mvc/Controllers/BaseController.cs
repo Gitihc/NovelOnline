@@ -23,6 +23,7 @@ namespace NovelOnlie.Mvc.Controllers
 
         public BaseController(IAuth authUtil) : base(authUtil)
         {
+           
         }
 
 

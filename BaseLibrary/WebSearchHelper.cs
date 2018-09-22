@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace BaseLibrary
 {
-    public static class WebSearchHelper
+    public class WebSearchHelper
     {
 
         public struct UrlGroup
@@ -24,39 +24,41 @@ namespace BaseLibrary
             public int DepathNumber;
         }
 
-        public static ReaderWriterLockSlim WriteTxtLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim WriteTxtLock = new ReaderWriterLockSlim();
         /// <summary>
         /// 最大线程数（默认5个，最多20）
         /// </summary>
-        public static int _MaxThreadCount = 5;
+        public int _MaxThreadCount = 5;
         /// <summary>
         /// 已访问的url
         /// </summary>
-        public static Queue _DoneQueue;
+        public Queue _DoneQueue;
         /// <summary>
         /// 未访问的url
         /// </summary>
-        public static Queue _UrlQueue;
+        public Queue _UrlQueue;
         /// <summary>
         /// 特殊url
         /// </summary>
-        public static Queue _SpecUrlQueue;
-        public static Queue _WebSiteBookInfoQueue;
+        public Queue _SpecUrlQueue;
+        public Queue _WebSiteBookInfoQueue;
         /// <summary>
         /// 搜索深度
         /// </summary>
-        public static int MaxSearchDepth = 6;
+        public int MaxSearchDepth = 15;
 
-        public static string BaseURL;
-        public static string SpecRegStr = string.Empty;
-        private static object UrlQueueLock = new object();
-        private static object DoneQueueLock = new object();
-        private static object SpecQueueLock = new object();
-        private static object WebSiteBookInfoQueueLock = new object();
-        public static bool IsAllDone = false; // 结束标识
+        public string BaseURL;
+        public string SpecRegStr = string.Empty;
+        private object UrlQueueLock = new object();
+        private object DoneQueueLock = new object();
+        private object SpecQueueLock = new object();
+        private object WebSiteBookInfoQueueLock = new object();
+        public bool IsAllDone = false; // 结束标识
+        public bool IsPause = false;//暂停标志
+        public bool IsStop = false;//停止标志
 
 
-        public static Queue DoneQueue
+        public Queue DoneQueue
         {
             get
             {
@@ -65,7 +67,7 @@ namespace BaseLibrary
                 return _DoneQueue;
             }
         }
-        public static Queue UrlQueue
+        public Queue UrlQueue
         {
             get
             {
@@ -74,7 +76,7 @@ namespace BaseLibrary
                 return _UrlQueue;
             }
         }
-        public static Queue SpecUrlQueue
+        public Queue SpecUrlQueue
         {
             get
             {
@@ -83,7 +85,7 @@ namespace BaseLibrary
                 return _SpecUrlQueue;
             }
         }
-        public static Queue WebSiteBookInfoQueue
+        public Queue WebSiteBookInfoQueue
         {
             get
             {
@@ -96,7 +98,7 @@ namespace BaseLibrary
         /// <summary>
         /// 最大线程数（默认5个，最多20）
         /// </summary>
-        public static int MaxThreadCount
+        public int MaxThreadCount
         {
             get
             {
@@ -108,7 +110,7 @@ namespace BaseLibrary
             }
         }
 
-        public static void Search(string url)
+        public void Search(string url)
         {
             if (string.IsNullOrEmpty(url) && string.IsNullOrEmpty(BaseURL)) return;
             if (!string.IsNullOrEmpty(url))
@@ -122,25 +124,27 @@ namespace BaseLibrary
 
             //for (int i = 0; i < MaxThreadCount; i++)
             //{
-                ThreadPool.QueueUserWorkItem(x =>
+            ThreadPool.QueueUserWorkItem(x =>
+            {
+                try
                 {
-                    try
+                    while (true)
                     {
-                        while (true)
-                        {
-                            if (IsAllDone) break;
-                            if (UrlQueue.Count == 0 && SpecUrlQueue.Count == 0 && UrlQueue.Count == 0) break;
-                            if (UrlQueue.Count == 0) Thread.Sleep(10000);
-                            UrlGroup urlGroup = (UrlGroup)UrlQueue.Dequeue();
-                            HandUrl(urlGroup, urlGroup.DepathNumber);
-                            Thread.Sleep(1000);
-                        }
+                        if (IsStop) break;
+                        if (IsAllDone) break;
+                        if (IsPause) continue;
+                        if (UrlQueue.Count == 0 && SpecUrlQueue.Count == 0 && UrlQueue.Count == 0) break;
+                        if (UrlQueue.Count == 0) Thread.Sleep(10000);
+                        UrlGroup urlGroup = (UrlGroup)UrlQueue.Dequeue();
+                        HandUrl(urlGroup, urlGroup.DepathNumber);
+                        Thread.Sleep(1000);
                     }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                });
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            });
             //}
             ThreadPool.QueueUserWorkItem(x =>
             {
@@ -148,6 +152,8 @@ namespace BaseLibrary
                 {
                     while (true)
                     {
+                        if (IsStop) break;
+                        if (IsPause) continue;
                         if (IsAllDone && SpecUrlQueue.Count == 0) break;
                         if (SpecUrlQueue.Count == 0) Thread.Sleep(10000);
                         HandSpecialUrl(SpecUrlQueue.Dequeue().ToString());
@@ -161,11 +167,11 @@ namespace BaseLibrary
             });
         }
 
-        public static event GetChapterInfoEventHandler GetNovelInfo;
+        public event GetChapterInfoEventHandler GetNovelInfo;
 
         public delegate NVNovel GetChapterInfoEventHandler(string url);
 
-        public static void HandSpecialUrl(string url)
+        public void HandSpecialUrl(string url)
         {
             try
             {
@@ -186,7 +192,7 @@ namespace BaseLibrary
             }
         }
 
-        public static void HandUrl(UrlGroup urlGroup, int depath)
+        public void HandUrl(UrlGroup urlGroup, int depath)
         {
             if (DoneQueue.Contains(urlGroup)) return;
             string html = HttpHelper.GetString(urlGroup.Url, Encoding.Default);
@@ -239,7 +245,7 @@ namespace BaseLibrary
         }
 
         // 匹配特殊url
-        public static void SepcialMatch(string url)
+        public void SepcialMatch(string url)
         {
             if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(SpecRegStr) || SpecUrlQueue.Contains(url))
                 return;
@@ -253,7 +259,7 @@ namespace BaseLibrary
         }
 
         // 获取站内url
-        public static List<string> MatchDomainURL(string html)
+        public List<string> MatchDomainURL(string html)
         {
             string regStr = string.Format("(https?|ftp|file)://{0}/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]", GetDomain());
             Regex defReg = new Regex(regStr);
@@ -267,7 +273,7 @@ namespace BaseLibrary
             return lstUrl;
         }
 
-        private static string GetDomain()
+        private string GetDomain()
         {
             if (string.IsNullOrEmpty(BaseURL))
             {

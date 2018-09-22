@@ -292,7 +292,7 @@ var initTable = function () {
             , { field: 'CreateDate', title: '创建时间', width: 150, align: "center", halign: "center" }
             , {
                 field: '_operater', title: '操作', width: 150, align: "center", halign: "center", formatter: function (v, r, i) {
-                    var m = '<i title="目录" class="fa fa-binoculars" style="color: #386;margin-left: 10px;" onclick="showChapterList(' + i + ')" ></i>';
+                    var m = '<i title="目录" class="fa fa-list" style="color: #386;margin-left: 10px;" onclick="showChapterList(' + i + ')" ></i>';
                     return m;
                 }
             }
