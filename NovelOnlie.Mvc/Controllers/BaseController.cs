@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Logging;
 using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NovelOnline.App.Interface;
@@ -20,10 +22,12 @@ namespace NovelOnlie.Mvc.Controllers
         protected Response Result = new Response();
         protected string Controllername;   //当前控制器小写名称
         protected string Actionname;        //当前Action小写名称
+        
+        protected readonly IHostingEnvironment _hostingEnvironment;
 
-        public BaseController(IAuth authUtil) : base(authUtil)
+        public BaseController(IAuth authUtil, IHostingEnvironment hostingEnvironment) : base(authUtil)
         {
-           
+            _hostingEnvironment = hostingEnvironment;
         }
 
 

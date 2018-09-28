@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,7 @@ namespace NovelOnlie.Mvc.Controllers
         private readonly NovelManagerApp _app;
         private readonly WebsiteApp _websiteApp;
         private IHostingEnvironment _hostingEnv;
-        public NovelManagerController(IAuth authUtil, NovelManagerApp app, WebsiteApp websiteApp, IHostingEnvironment hostingEnv) : base(authUtil)
+        public NovelManagerController(IAuth authUtil, IHostingEnvironment hostingEnvironment, NovelManagerApp app, WebsiteApp websiteApp, IHostingEnvironment hostingEnv) : base(authUtil, hostingEnvironment)
         {
             _app = app;
             _websiteApp = websiteApp;
@@ -239,8 +238,7 @@ namespace NovelOnlie.Mvc.Controllers
                 var novel = _app.GetNovel(novelId);
                 if (novel != null)
                 {
-
-                    _app.DownNovel(HttpContext, novel);
+                    _app.DownNovel(HttpContext, _hostingEnvironment.ContentRootPath, novel);
                 }
             }
             catch (Exception ex)

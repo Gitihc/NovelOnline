@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -14,7 +15,7 @@ namespace NovelOnlie.Mvc.Controllers
     {
         private readonly ChapterManagerApp _app;
         private readonly NovelManagerApp _novelManagerApp;
-        public ChapterManagerController(IAuth authUtil, NovelManagerApp novelManagerApp, ChapterManagerApp app) : base(authUtil)
+        public ChapterManagerController(IAuth authUtil, IHostingEnvironment hostingEnvironment, NovelManagerApp novelManagerApp, ChapterManagerApp app) : base(authUtil, hostingEnvironment)
         {
             _novelManagerApp = novelManagerApp;
             _app = app;
@@ -35,7 +36,8 @@ namespace NovelOnlie.Mvc.Controllers
             try
             {
                 var user = _authUtil.GetCurrentUser().User;
-                data = _app.GetChapterContent(user, novelId, chapterId);
+                var basePath = _hostingEnvironment.ContentRootPath;
+                data = _app.GetChapterContent(basePath, user, novelId, chapterId);
             }
             catch (Exception ex)
             {
@@ -84,10 +86,10 @@ namespace NovelOnlie.Mvc.Controllers
                         {
                             _chapterManagerApp.UpdateChapterState(novel.Id, chapter.Id, 1);
                             var tmpChapterContent = _chapterManagerApp.GetWebChapterContent(chapter);
-                            _chapterManagerApp.SaveToLocal(novel, chapter, tmpChapterContent);
+                            _chapterManagerApp.SaveToLocal(_hostingEnvironment.ContentRootPath, novel, chapter, tmpChapterContent);
                             _chapterManagerApp.UpdateChapterState(novel.Id, chapter.Id, 2);
                         }
-                        
+
                         if (_chapterManagerApp.IsAllChapterToLocal(novel.Id))
                         {
                             novel.State = 2;
@@ -132,7 +134,7 @@ namespace NovelOnlie.Mvc.Controllers
                         {
                             _chapterManagerApp.UpdateChapterState(novel.Id, chapter.Id, 1);
                             var tmpChapterContent = _chapterManagerApp.GetWebChapterContent(chapter);
-                            _chapterManagerApp.SaveToLocal(novel, chapter, tmpChapterContent);
+                            _chapterManagerApp.SaveToLocal(_hostingEnvironment.ContentRootPath, novel, chapter, tmpChapterContent);
                             _chapterManagerApp.UpdateChapterState(novel.Id, chapter.Id, 2);
                         }
 

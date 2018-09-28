@@ -1,5 +1,6 @@
 ﻿using System;
 using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -9,7 +10,7 @@ namespace NovelOnlie.Mvc.Controllers
     public class RelevanceManagerController : BaseController
     {
         private readonly RevelanceManagerApp _app;
-        public RelevanceManagerController(IAuth authUtil, RevelanceManagerApp app) : base(authUtil)
+        public RelevanceManagerController(IAuth authUtil, IHostingEnvironment hostingEnvironment, RevelanceManagerApp app) : base(authUtil,hostingEnvironment)
         {
             _app = app;
         }

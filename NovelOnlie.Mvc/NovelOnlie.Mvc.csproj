@@ -10,10 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="logfile\**" />
     <Compile Remove="Properties\PublishProfiles\**" />
+    <Content Remove="logfile\**" />
     <Content Remove="Properties\PublishProfiles\**" />
+    <EmbeddedResource Remove="logfile\**" />
     <EmbeddedResource Remove="Properties\PublishProfiles\**" />
+    <None Remove="logfile\**" />
     <None Remove="Properties\PublishProfiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="log-file.log" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,9 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
+    <PackageReference Include="Abp.Castle.NLog" Version="3.7.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.8" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>

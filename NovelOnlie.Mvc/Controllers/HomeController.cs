@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -8,7 +9,7 @@ namespace NovelOnlie.Mvc.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(IAuth authUtil) : base(authUtil)
+        public HomeController(IAuth authUtil, IHostingEnvironment hostingEnvironment) : base(authUtil,hostingEnvironment)
         {
         }
         public IActionResult Index()

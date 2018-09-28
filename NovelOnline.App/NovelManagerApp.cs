@@ -61,19 +61,18 @@ namespace NovelOnline.App
 
                 Repository.Delete(x => x.Id == novelId);//删除Novel记录
                 _chapterManager.DropNovelTable(novelId);//删除章节表
-                var files = Directory.GetFiles(saveFilePath);
-                foreach (var f in files)
-                {
-                    if (File.Exists(f))   //删除物理文件
-                    {
-                        File.Delete(f);
-                    }
-                }
-             
+
                 var dirPath = saveFilePath;
                 if (Directory.Exists(dirPath)) //删除物理文件夹
                 {
-
+                    var files = Directory.GetFiles(saveFilePath);
+                    foreach (var f in files)
+                    {
+                        if (File.Exists(f))   //删除物理文件
+                        {
+                            File.Delete(f);
+                        }
+                    }
                     Directory.Delete(dirPath);
                 }
             }
@@ -97,15 +96,16 @@ namespace NovelOnline.App
             var tableListUrl = url;
             var objNVB = NVHelper.NVBaseObject(tableListUrl); //获取对应处理类
             if (objNVB == null) return false;
+            var newNovelId = Guid.NewGuid().ToString();
             var newNovel = new Novel
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = newNovelId,
                 Name = string.IsNullOrEmpty(novelName) ? DateTime.Now.ToString("yyyyMMddHHmmss") : novelName,
-                PhysicalPath = "",
+                PhysicalPath = @"books\" + newNovelId,
                 OriginLink = tableListUrl,
                 FromType = 1
             };
-            newNovel.PhysicalPath = Path.Combine(AppContext.BaseDirectory, @"books\" + newNovel.Id);
+            //newNovel.PhysicalPath = Path.Combine(AppContext.BaseDirectory, @"books\" + newNovel.Id);
 
             Repository.Add(newNovel);//添加到Novel表
             _userNovelApp.AddRelationShip(user.Id, user.Name, newNovel.Id, newNovel.Name);//添加用户与novel关系
@@ -136,6 +136,11 @@ namespace NovelOnline.App
                 //保存章节信息到 以novelId为表名的章节表中
                 _chapterManager.AddRandChapter(newNovel.Id, listChapter);
                 //线程获取章节数据保存到本地
+            }
+            else
+            {
+                //更改novel状态为获取中
+                Repository.Update(x => x.Id == newNovel.Id, n => new Novel { State = -2, });
             }
             return false;
         }
@@ -200,7 +205,7 @@ namespace NovelOnline.App
             {
                 Id = novelId,
                 Name = filename,
-                PhysicalPath = filePath,
+                PhysicalPath = @"books\" + novelId,
                 OriginLink = "",
             });
             _userNovelApp.AddRelationShip(user.Id, user.Name, novelId, filename);
@@ -235,21 +240,21 @@ namespace NovelOnline.App
 
         #region 下载
 
-        public void DownNovel(HttpContext httpContext, Novel novel)
+        public void DownNovel(HttpContext httpContext, string basePath, Novel novel)
         {
             switch (novel.FromType)
             {
                 case 0:
                     break;
                 case 1:
-                    DownWebNovel(httpContext, novel);
+                    DownWebNovel(httpContext, basePath, novel);
                     break;
             }
         }
 
-        private void DownWebNovel(HttpContext httpContext, Novel novel)
+        private void DownWebNovel(HttpContext httpContext, string basePath, Novel novel)
         {
-            var bookDir = novel.PhysicalPath;
+            var bookDir = Path.Combine(basePath, novel.PhysicalPath);
             if (Directory.Exists(bookDir))
             {
                 var sqlStr = string.Format("SELECT * FROM [{0}] ORDER BY SORT ", novel.Id);

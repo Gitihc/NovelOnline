@@ -1,9 +1,8 @@
 ﻿using Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
 using OpenAuth.App.Response;
-using Repository.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace NovelOnlie.Mvc.Controllers
     public class UserSessionController : BaseController
     {
         private readonly AuthStrategyContext _authStrategyContext;
-        public UserSessionController(IAuth authUtil) : base(authUtil)
+        public UserSessionController(IAuth authUtil, IHostingEnvironment hostingEnvironment) : base(authUtil,hostingEnvironment)
         {
             _authStrategyContext = _authUtil.GetCurrentUser();
         }

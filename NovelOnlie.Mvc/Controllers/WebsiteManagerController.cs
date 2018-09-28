@@ -1,4 +1,6 @@
 ﻿using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -12,7 +14,7 @@ namespace NovelOnlie.Mvc.Controllers
     {
         private readonly WebsiteApp _websiteApp;
 
-        public WebsiteManagerController(IAuth authUtil, WebsiteApp websiteApp) : base(authUtil)
+        public WebsiteManagerController(IAuth authUtil, IHostingEnvironment hostingEnvironment, WebsiteApp websiteApp) : base(authUtil, hostingEnvironment)
         {
             _websiteApp = websiteApp;
         }

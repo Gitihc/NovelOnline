@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -19,7 +17,7 @@ namespace NovelOnlie.Mvc.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="app"></param>
-        public ModuleManagerController(IAuth authUtil, ModuleManagerApp app) : base(authUtil)
+        public ModuleManagerController(IAuth authUtil, IHostingEnvironment hostingEnvironment, ModuleManagerApp app) : base(authUtil,hostingEnvironment)
         {
             _app = app;
         }

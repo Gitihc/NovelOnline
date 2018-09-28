@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -13,7 +12,7 @@ namespace NovelOnlie.Mvc.Controllers
     public class UserManagerController : BaseController
     {
         private readonly UserManagerApp _app;
-        public UserManagerController(IAuth authUtil, UserManagerApp app) : base(authUtil)
+        public UserManagerController(IAuth authUtil, IHostingEnvironment hostingEnvironment, UserManagerApp app) : base(authUtil,hostingEnvironment)
         {
             _app = app;
         }

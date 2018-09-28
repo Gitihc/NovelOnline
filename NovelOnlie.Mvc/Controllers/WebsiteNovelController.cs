@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NovelOnline.App;
 using NovelOnline.App.Interface;
@@ -13,7 +12,7 @@ namespace NovelOnlie.Mvc.Controllers
     {
 
         private readonly WebsiteNovelApp _websiteNovelApp;
-        public WebsiteNovelController(IAuth authUtil, WebsiteNovelApp websiteNovelApp) : base(authUtil)
+        public WebsiteNovelController(IAuth authUtil, IHostingEnvironment hostingEnvironment, WebsiteNovelApp websiteNovelApp) : base(authUtil, hostingEnvironment)
         {
             _websiteNovelApp = websiteNovelApp;
         }
@@ -31,7 +30,7 @@ namespace NovelOnlie.Mvc.Controllers
                 listWebsiteNovel = (from p in listWebsiteNovel where p.Name.Contains(key) || p.Author.Contains(key) select p).ToList();
             }
             var r = listWebsiteNovel.Skip((page - 1) * rows).Take(rows);
-            
+
             var obj = new { total = listWebsiteNovel.Count(), rows = r };
 
             return JsonHelper.Instance.Serialize(obj);
@@ -42,7 +41,7 @@ namespace NovelOnlie.Mvc.Controllers
         /// </summary>
         /// <param name="novelIds"></param>
         /// <returns></returns>
-        public string RemoveWebsiteNovel(string websiteId,string[] ids)
+        public string RemoveWebsiteNovel(string websiteId, string[] ids)
         {
             try
             {
@@ -57,12 +56,12 @@ namespace NovelOnlie.Mvc.Controllers
             return JsonHelper.Instance.Serialize(Result);
         }
         //webnovel to mynovel
-        public string AddWebsiteNovelInMyNovel(string websiteId,string id)
+        public string AddWebsiteNovelInMyNovel(string websiteId, string id)
         {
             try
             {
                 var user = _authUtil.GetCurrentUser().User;
-                _websiteNovelApp.AddWebsiteNovelInMyNovel(user,websiteId, id);
+                _websiteNovelApp.AddWebsiteNovelInMyNovel(user, websiteId, id);
             }
             catch (Exception ex)
             {

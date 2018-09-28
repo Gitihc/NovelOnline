@@ -28,7 +28,7 @@ namespace NovelOnline.App
             return listChapter;
         }
 
-        public string GetChapterContent(User user, string novelId, string chapterId = "")
+        public string GetChapterContent(string basePath, User user, string novelId, string chapterId = "")
         {
             var novelObj = UnitWork.FindSingle<Novel>(x => x.Id == novelId);
             if (novelObj == null) return string.Empty;
@@ -50,7 +50,7 @@ namespace NovelOnline.App
                         chapterId = chapter.Id;
                         long startPos = chapter.ChapterStartPosition;
                         long endPos = chapter.ChapterEndPosition;
-                        string bookPath = novelObj.PhysicalPath;
+                        string bookPath = Path.Combine(basePath, novelObj.PhysicalPath);
                         chapterContent = GetLocalNovelContent(bookPath, startPos, endPos);
                         break;
                     case 1://网络
@@ -59,13 +59,14 @@ namespace NovelOnline.App
                         {
                             UpdateChapterState(novelId, chapter.Id, 1);
                             var tmpChapterContent = GetWebChapterContent(chapter);
-                            SaveToLocal(novelObj, chapter, tmpChapterContent);
+                            SaveToLocal(basePath, novelObj, chapter, tmpChapterContent);
                             UpdateChapterState(novelId, chapter.Id, 2);
                         }
 
                         var title = chapterTitle;
                         title = regexOfSaveChapter.Replace(title, "");
                         var filePath = Path.Combine(novelObj.PhysicalPath, title + ".txt");
+                        filePath = Path.Combine(basePath, filePath);
                         //本地读取
                         chapterContent = GetWebNovelContent(filePath);
                         break;
@@ -366,11 +367,11 @@ namespace NovelOnline.App
         /// <param name="novel"></param>
         /// <param name="chapter"></param>
         /// <param name="chapterContent"></param>
-        public void SaveToLocal(Novel novel, Chapter chapter, string chapterContent)
+        public void SaveToLocal(string basePath, Novel novel, Chapter chapter, string chapterContent)
         {
             try
             {
-                var dirPath = novel.PhysicalPath;
+                var dirPath = Path.Combine(basePath, novel.PhysicalPath);
                 if (string.IsNullOrEmpty(dirPath)) return;
                 if (!Directory.Exists(dirPath))
                 {
